@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev:front": "nx dev frontend",
-    "dev:back": "nx serve backend --configuration=development",
+    "dev:back": "nx serve backend",
     "dev:all": "nx run-many --parallel --targets=dev,serve",
     "format": "nx format:write --all",
     "lint": "nx run-many -t lint",
