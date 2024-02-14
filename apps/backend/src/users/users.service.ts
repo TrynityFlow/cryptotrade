@@ -23,8 +23,8 @@ export class UsersService {
       },
       select: {
         id: true,
-        username: true
-      }
+        username: true,
+      },
     });
 
     return user;

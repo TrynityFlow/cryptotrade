@@ -21,7 +21,7 @@ export class UsersController {
   async getProfile(@Req() req: any) {
     if (!req.user?.id) throw new InternalServerErrorException();
 
-    return await this.usersService.findById(req.user.id)
+    return await this.usersService.findById(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)
