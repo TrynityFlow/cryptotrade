@@ -1,9 +1,4 @@
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 
 export class CreateOpDto {
   @IsString()
