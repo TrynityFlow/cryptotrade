@@ -1,18 +1,24 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class CreateOpDto {
-    @IsString()
-    @IsNotEmpty()
-    currency_id: string;
+  @IsString()
+  @IsNotEmpty()
+  currency_id: string;
 
-    @IsBoolean()
-    sell: boolean
+  @IsBoolean()
+  sell: boolean;
 
-    @IsNumber()
-    @IsPositive()
-    amount: number
+  @IsNumber()
+  @IsPositive()
+  amount: number;
 
-    @IsNumber()
-    @IsPositive()
-    price: number
+  @IsNumber()
+  @IsPositive()
+  price: number;
 }

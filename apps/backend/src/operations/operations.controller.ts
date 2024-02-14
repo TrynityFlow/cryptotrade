@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-    Body,
+  Body,
   Controller,
   Get,
   InternalServerErrorException,
@@ -17,7 +18,6 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getOps(@Req() req: any) {
     if (!req.user.id) throw new InternalServerErrorException();
     return this.opService.getAllOpsOfUser(req.user.id);
@@ -25,7 +25,9 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createOp(@Body() payload: CreateOpDto) {
-    payload
+  async createOp(@Req() req:any, @Body() payload: CreateOpDto) {
+    if (!req.user.id) throw new InternalServerErrorException();
+
+    return await this.opService.insertOp(req.user.id, payload)
   }
 }
