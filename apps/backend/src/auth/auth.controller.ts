@@ -11,11 +11,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: Req, @Res() res: Response) {
+    const token = await this.authService.login(req.user as User);
 
-    const token = await this.authService.login(req.user as User)
-
-    res.cookie('Authorization', token.access_token, {httpOnly: true})
-    res.send({isLogged: true})
-    return
+    res.cookie('Authorization', token.access_token, { httpOnly: true });
+    res.send({ isLogged: true });
+    return;
   }
 }

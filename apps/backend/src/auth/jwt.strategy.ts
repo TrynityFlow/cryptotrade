@@ -5,9 +5,8 @@ import { User } from '../types';
 import { Request } from 'express';
 
 function cookieExtractor(req: Request) {
-  if (req && req.cookies)
-  {
-      return req.cookies['Authorization'];
+  if (req && req.cookies) {
+    return req.cookies['Authorization'];
   }
   return null;
 }
@@ -22,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: User) {
-    return { userId: payload.id, username: payload.username };
+  async validate(payload: User): Promise<User> {
+    return payload;
   }
 }
