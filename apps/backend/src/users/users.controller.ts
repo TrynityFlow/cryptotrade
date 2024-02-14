@@ -44,7 +44,9 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() payload: CreateUserDto) {
-    return await this.usersService.createUser(payload.username, payload.password)
+    return await this.usersService.createUser(
+      payload.username,
+      payload.password,
+    );
   }
-
 }
