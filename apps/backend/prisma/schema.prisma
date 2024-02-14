@@ -23,7 +23,7 @@ model operation {
 model user {
   id        Int         @id @default(autoincrement())
   username  String      @unique(map: "username") @default("Unknown") @db.VarChar(30)
-  password  Bytes?      @db.Binary(60)
+  password  String      @db.VarChar(60)
   operation operation[]
 
   @@index([username], map: "username_idx")
