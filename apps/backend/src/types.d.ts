@@ -11,4 +11,4 @@ export type Operation = {
   amount: number;
   price: number;
   ts: string;
-}
+};
