@@ -10,6 +10,7 @@ export class OperationsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getOps(@Req() req: Request) {
-    req.user;
+    return req.user
+    // return this.opService.getAllOpsOfUser(req.user.userId)
   }
 }
