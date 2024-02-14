@@ -1,4 +1,10 @@
-import { Controller, Get, InternalServerErrorException, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  InternalServerErrorException,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { OperationsService } from './operations.service';
 
@@ -10,7 +16,7 @@ export class OperationsController {
   @Get()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getOps(@Req() req: any) {
-    if(!req.user.id) throw new InternalServerErrorException()
-    return this.opService.getAllOpsOfUser(req.user.id)
+    if (!req.user.id) throw new InternalServerErrorException();
+    return this.opService.getAllOpsOfUser(req.user.id);
   }
 }
