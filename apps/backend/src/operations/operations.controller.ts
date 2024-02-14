@@ -5,11 +5,11 @@ import { OperationsService } from './operations.service';
 
 @Controller('operations')
 export class OperationsController {
-    constructor(private readonly opService: OperationsService) {}
+  constructor(private readonly opService: OperationsService) {}
 
-    @UseGuards(JwtAuthGuard)
-    @Get()
-    async getOps(@Req() req: Request) {
-        req.user
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getOps(@Req() req: Request) {
+    req.user;
+  }
 }
