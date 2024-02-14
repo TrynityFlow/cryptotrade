@@ -25,9 +25,9 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createOp(@Req() req:any, @Body() payload: CreateOpDto) {
+  async createOp(@Req() req: any, @Body() payload: CreateOpDto) {
     if (!req.user.id) throw new InternalServerErrorException();
 
-    return await this.opService.insertOp(req.user.id, payload)
+    return await this.opService.insertOp(req.user.id, payload);
   }
 }

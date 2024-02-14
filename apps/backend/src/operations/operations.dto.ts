@@ -1,7 +1,6 @@
 import {
   IsBoolean,
   IsNotEmpty,
-  IsNumber,
   IsPositive,
   IsString,
 } from 'class-validator';
@@ -14,11 +13,9 @@ export class CreateOpDto {
   @IsBoolean()
   sell: boolean;
 
-  @IsNumber()
   @IsPositive()
   amount: number;
 
-  @IsNumber()
   @IsPositive()
   price: number;
 }

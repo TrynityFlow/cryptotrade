@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOpDto } from './operations.dto';
-import {operation} from '@prisma/client'
+import { operation } from '@prisma/client';
 
 @Injectable()
 export class OperationsService {
@@ -15,15 +15,18 @@ export class OperationsService {
     });
   }
 
-  async insertOp(userId: number, {amount,currency_id,price,sell}: CreateOpDto):Promise<operation> {
+  async insertOp(
+    userId: number,
+    { amount, currency_id, price, sell }: CreateOpDto,
+  ): Promise<operation> {
     return await this.prisma.operation.create({
-        data: {
-            user_id: userId,
-            amount: amount,
-            sell: sell,
-            currency_id: currency_id,
-            price: price
-        }
-    })
+      data: {
+        user_id: userId,
+        amount: amount,
+        sell: sell,
+        currency_id: currency_id,
+        price: price,
+      },
+    });
   }
 }
