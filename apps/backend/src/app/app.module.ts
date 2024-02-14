@@ -2,9 +2,17 @@ import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersController } from '../users/users.controller';
+import { AuthController } from '../auth/auth.controller';
+import { UsersModule } from '../users/users.module';
+import { AuthModule } from '../auth/auth.module';
+import { OperationsModule } from '../operations/operations.module';
 
 @Module({
   imports: [
+    UsersModule,
+    AuthModule,
+    OperationsModule,
     ThrottlerModule.forRoot([
       {
         name: 'short',
@@ -18,7 +26,7 @@ import { AppService } from './app.service';
       },
     ]),
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController, AuthController],
   providers: [AppService],
 })
 export class AppModule {}

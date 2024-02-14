@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model operation {
+  id          BigInt    @id @default(autoincrement())
+  user_id     Int?
+  currency_id String    @default("notacurr") @db.VarChar(32)
+  sell        Boolean?  @default(false)
+  amount      Float     @default(0) @db.Float
+  price       Float     @default(0) @db.Float
+  ts          DateTime? @default(now()) @db.Timestamp(0)
+  user        user?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "operation_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+}
+
+model user {
+  id        Int         @id @default(autoincrement())
+  username  String      @unique(map: "username") @default("Unknown") @db.VarChar(30)
+  password  String      @db.VarChar(60)
+  operation operation[]
+
+  @@index([username], map: "username_idx")
+}
