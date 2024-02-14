@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -21,42 +21,46 @@ export class UsersService {
       where: {
         id: id,
       },
+      select: {
+        id: true,
+        username: true
+      }
     });
 
     return user;
   }
 
-  async patchUsername(id:number, username: string) { 
+  async patchUsername(id: number, username: string) {
     try {
       return await this.prisma.user.update({
-        where: {id: id},
+        where: { id: id },
         data: {
-          username: username
+          username: username,
         },
         select: {
           id: true,
-          username: true
-        }
-      })
+          username: true,
+        },
+      });
     } catch (error) {
-      return {error: error}
+      return { error: error };
     }
   }
 
-  async patchPassword(id:number, password: string) { 
+  async patchPassword(id: number, password: string) {
     try {
       return await this.prisma.user.update({
-        where: {id: id},
+        where: { id: id },
         data: {
-          password: bcrypt.hashSync(password, 12)
+          password: bcrypt.hashSync(password, 12),
         },
         select: {
           id: true,
-          username: true
-        }
-      })
+          username: true,
+        },
+      });
     } catch (error) {
-      return {error: error}
+      return { error: error };
     }
   }
 }
