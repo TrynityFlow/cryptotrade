@@ -63,4 +63,21 @@ export class UsersService {
       return { error: error };
     }
   }
+
+  async createUser(username: string, password: string) {
+    try {
+      return await this.prisma.user.create({
+        data: {
+          username: username,
+          password: bcrypt.hashSync(password, 12)
+        },
+        select: {
+          id: true,
+          username: true,
+        }
+      });
+    } catch (error) {
+      return { error: error };
+    }
+  }
 }

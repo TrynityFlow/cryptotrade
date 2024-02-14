@@ -1,11 +1,11 @@
-import { IsAlphanumeric, IsStrongPassword, Length } from "class-validator";
+import { IsAlphanumeric, IsStrongPassword, Length } from 'class-validator';
 
-export class CreateuserDto {
-    @IsAlphanumeric()
-    @Length(5, 30)
-    username: string;
+export class CreateUserDto {
+  @IsAlphanumeric()
+  @Length(5, 30)
+  username: string;
 
-    @IsStrongPassword()
-    @Length(8)
-    password: string;
+  @IsStrongPassword()
+  @Length(8)
+  password: string;
 }
