@@ -12,7 +12,8 @@ model operation {
   user_id     Int?
   currency_id String    @default("notacurr") @db.VarChar(32)
   sell        Boolean?  @default(false)
-  amount      Float?    @db.Float
+  amount      Float     @default(0) @db.Float
+  price       Float     @default(0) @db.Float
   ts          DateTime? @default(now()) @db.Timestamp(0)
   user        user?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "operation_ibfk_1")
 
