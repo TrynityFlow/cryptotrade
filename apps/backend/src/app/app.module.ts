@@ -7,12 +7,14 @@ import { AuthController } from '../auth/auth.controller';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
 import { OperationsModule } from '../operations/operations.module';
+import { WalletModule } from '../wallet/wallet.module';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
     OperationsModule,
+    WalletModule,
     ThrottlerModule.forRoot([
       {
         name: 'short',
