@@ -65,6 +65,6 @@ export class WalletService {
     price: number,
   ): Promise<boolean> {
     const res = await this.getBalanceById(userId, currId);
-    return (res - price) > 0;
+    return res - price > 0;
   }
 }
