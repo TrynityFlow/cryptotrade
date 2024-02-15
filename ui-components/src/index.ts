@@ -1,5 +1,3 @@
-import * as Dropdown from './components/ui/dropdown-menu'
+import * as Dropdown from './components/ui/dropdown-menu';
 
-export {
-    Dropdown
-}
+export { Dropdown };

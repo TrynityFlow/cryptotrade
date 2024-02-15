@@ -1,9 +1,9 @@
 {
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths": {
-        "@cryptotrade/ui-components": ["ui-components/src/index.ts"],
-        "@cryptotrade/ui-components/*": ["ui-components/src/*"]
-      }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@cryptotrade/ui-components": ["ui-components/src/index.ts"],
+      "@cryptotrade/ui-components/*": ["ui-components/src/*"]
     }
   }
+}
