@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOpDto } from './operations.dto';
+import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
 export class OperationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly walletService: WalletService) {}
 
   async getAllOpsOfUser(id: number) {
     return this.prisma.operation.findMany({
@@ -18,13 +19,21 @@ export class OperationsService {
     userId: number,
     { amount, currency_id, price, sell }: CreateOpDto,
   ) {
+    const total = amount * price
+    const isPossible = await this.walletService.checkSell(userId, currency_id, total)
+
+    if(sell && !isPossible) {
+      throw new BadRequestException('Action will cause negative balance')
+    }
+
     return await this.prisma.operation.create({
       data: {
         user_id: userId,
         amount: amount,
         sell: sell,
         currency_id: currency_id,
-        price: price,
+        price: total,
+        partial_price: price
       },
     });
   }
