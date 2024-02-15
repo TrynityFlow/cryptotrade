@@ -5,12 +5,13 @@ import {
   Get,
   InternalServerErrorException,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { OperationsService } from './operations.service';
-import { CreateOpDto } from './operations.dto';
+import { CreateOpDto, GetOpDto } from './operations.dto';
 
 @Controller('operations')
 export class OperationsController {
@@ -18,9 +19,9 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getOps(@Req() req: any) {
+  async getOps(@Req() req: any, @Query() query: GetOpDto) {
     if (!req.user.id) throw new InternalServerErrorException();
-    return this.opService.getAllOpsOfUser(req.user.id);
+    return this.opService.getAllOpsOfUser(req.user.id, query.page, query.count);
   }
 
   @UseGuards(JwtAuthGuard)
