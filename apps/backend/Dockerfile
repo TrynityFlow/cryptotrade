@@ -21,6 +21,5 @@ RUN chown -R backend:backend .
 
 RUN npm --omit=dev -f install
 RUN npx prisma generate
-RUN npx prisma db push
 
 CMD [ "node", "main.js" ]
