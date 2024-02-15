@@ -14,7 +14,7 @@ export class AuthController {
     const token = await this.authService.login(req.user as User);
 
     res.cookie('Authorization', token.access_token, { httpOnly: true });
-    res.send({ isLogged: true });
+    res.send({id: token.id, username: token.username});
     return;
   }
 }
