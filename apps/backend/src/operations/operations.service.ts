@@ -10,11 +10,13 @@ export class OperationsService {
     private readonly walletService: WalletService,
   ) {}
 
-  async getAllOpsOfUser(id: number) {
+  async getAllOpsOfUser(id: number, page: number, count: number) {
     return this.prisma.operation.findMany({
       where: {
         user_id: id,
       },
+      skip: (page - 1) * count,
+      take: +count
     });
   }
 

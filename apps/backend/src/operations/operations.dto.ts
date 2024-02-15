@@ -1,5 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsPositive, IsString } from 'class-validator';
-
+import { Type } from 'class-transformer'
 export class CreateOpDto {
   @IsString()
   @IsNotEmpty()
@@ -13,4 +13,14 @@ export class CreateOpDto {
 
   @IsPositive()
   price: number;
+}
+
+export class GetOpDto {
+  @Type(() => Number)
+  @IsPositive()
+  page = 1;
+
+  @Type(() => Number)
+  @IsPositive()
+  count = 1;
 }
