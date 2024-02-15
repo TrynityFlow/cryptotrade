@@ -14,30 +14,31 @@ export class WalletService {
       },
       _sum: {
         price: true,
-        amount: true
+        amount: true,
       },
       _avg: {
-        price: true
+        price: true,
       },
     });
 
-    if(!group) return {}
+    if (!group) return {};
 
-    const cryptoMap = new Map<string, Balance>()
-    group.map(current => {
-      const id = current.currency_id
-      if(!cryptoMap.has(id)) cryptoMap.set(id, {balance: 0, amount: 0, avg_sell: 0, avg_buy: 0})
+    const cryptoMap = new Map<string, Balance>();
+    group.map((current) => {
+      const id = current.currency_id;
+      if (!cryptoMap.has(id))
+        cryptoMap.set(id, { balance: 0, amount: 0, avg_sell: 0, avg_buy: 0 });
 
-      cryptoMap.get(id).balance += (current._sum.price * (current.sell ? -1 : 1))
-      cryptoMap.get(id).amount += (current._sum.amount * (current.sell ? -1 : 1))
+      cryptoMap.get(id).balance += current._sum.price * (current.sell ? -1 : 1);
+      cryptoMap.get(id).amount += current._sum.amount * (current.sell ? -1 : 1);
 
-      if(current.sell) {
-        cryptoMap.get(id).avg_sell = current._avg.price
-        return
+      if (current.sell) {
+        cryptoMap.get(id).avg_sell = current._avg.price;
+        return;
       }
-      cryptoMap.get(id).avg_buy = current._avg.price
-    })
-    return Object.fromEntries(cryptoMap)
+      cryptoMap.get(id).avg_buy = current._avg.price;
+    });
+    return Object.fromEntries(cryptoMap);
   }
 
   async getBalanceById(userId: number, currId: string) {
@@ -45,21 +46,25 @@ export class WalletService {
       by: ['sell'],
       where: {
         user_id: userId,
-        currency_id: currId
+        currency_id: currId,
       },
       _sum: {
         price: true,
       },
     });
 
-    if(!group) return 0
+    if (!group) return 0;
     return group.reduce((acc, current) => {
-      return acc + (current._sum.price * (current.sell ? -1 : 1))
-    }, 0)
+      return acc + current._sum.price * (current.sell ? -1 : 1);
+    }, 0);
   }
 
-  async checkSell(userId: number, currId: string, price: number): Promise<boolean> {
-    const res = await this.getBalanceById(userId, currId)
-    return (res - price) > 0
+  async checkSell(
+    userId: number,
+    currId: string,
+    price: number,
+  ): Promise<boolean> {
+    const res = await this.getBalanceById(userId, currId);
+    return res - price > 0;
   }
 }
