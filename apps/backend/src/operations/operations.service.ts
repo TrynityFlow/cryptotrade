@@ -16,7 +16,7 @@ export class OperationsService {
         user_id: id,
       },
       skip: (page - 1) * count,
-      take: +count
+      take: +count,
     });
   }
 

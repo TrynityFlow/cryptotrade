@@ -1,5 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsPositive, IsString } from 'class-validator';
-import { Type } from 'class-transformer'
+import { Type } from 'class-transformer';
 export class CreateOpDto {
   @IsString()
   @IsNotEmpty()

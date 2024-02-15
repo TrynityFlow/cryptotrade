@@ -10,13 +10,15 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    transformOptions: {
-      exposeDefaultValues: true,
-      enableImplicitConversion: true
-    }
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        exposeDefaultValues: true,
+        enableImplicitConversion: true,
+      },
+    }),
+  );
   app.use(cookieParser());
   app.enableCors({
     origin: process.env.TARGET_SITE || 'localhost:3000',
