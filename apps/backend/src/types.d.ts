@@ -12,3 +12,10 @@ export type Operation = {
   price: number;
   ts: string;
 };
+
+export type Balance = {
+  balance: number;
+  amount: number;
+  avg_sell: number;
+  avg_buy: number;
+};
