@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
@@ -86,7 +87,22 @@ export class UsersService {
     }
   }
 
-  async delUser(userId: number) {
+  async delUser(userId: number, pass: string) {
+    const dbPass = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        password: true,
+      },
+    });
+
+    if (!dbPass) throw new NotFoundException('user not found');
+
+    if (!bcrypt.compareSync(pass, dbPass.password)) {
+      throw new UnauthorizedException();
+    }
+
     try {
       const [, user] = await this.prisma.$transaction([
         this.prisma.operation.deleteMany({
@@ -97,6 +113,10 @@ export class UsersService {
         this.prisma.user.delete({
           where: {
             id: userId,
+          },
+          select: {
+            id: true,
+            username: true,
           },
         }),
       ]);

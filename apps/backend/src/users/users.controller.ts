@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { PatchPasswordDto, PatchUsernameDto } from './patchUser.dto';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './createUser.dto';
+import { DeleteUserDto } from './delUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -52,7 +53,10 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Delete()
-  async deleteUser(@Req() req: any) {
-    return await this.usersService.delUser(req.user.id as number);
+  async deleteUser(@Req() req: any, @Body() payload: DeleteUserDto) {
+    return await this.usersService.delUser(
+      req.user.id as number,
+      payload.password,
+    );
   }
 }
