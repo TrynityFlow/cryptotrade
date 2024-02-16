@@ -5,6 +5,9 @@ dist
 tmp
 /out-tsc
 
+.env
+.sql-env
+
 # dependencies
 node_modules
 

@@ -1,4 +1,3 @@
-# Run the container with `docker run --network=host -p 4000:4000 --env -t crypto-trade-api`.
 FROM docker.io/node:lts-alpine
 
 ENV HOST=0.0.0.0

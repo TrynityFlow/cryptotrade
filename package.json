@@ -13,7 +13,6 @@
     "test:all": "nx run-many -t test",
     "test:back": "nx test backend",
     "test:front": "nx test frontend",
-    "docker:back": "docker build -f apps/backend/Dockerfile . -t crypto-trade-api",
     "prepare": "husky || true"
   },
   "private": true,
