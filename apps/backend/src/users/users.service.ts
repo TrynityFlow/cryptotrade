@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
@@ -82,6 +83,27 @@ export class UsersService {
       });
     } catch (error) {
       throw new BadRequestException('User already exists');
+    }
+  }
+
+  async delUser(userId: number) {
+    try {
+      const [, user] = await this.prisma.$transaction([
+        this.prisma.operation.deleteMany({
+          where: {
+            user_id: userId,
+          },
+        }),
+        this.prisma.user.delete({
+          where: {
+            id: userId,
+          },
+        }),
+      ]);
+
+      return user;
+    } catch (error) {
+      throw new NotFoundException('User not found');
     }
   }
 }

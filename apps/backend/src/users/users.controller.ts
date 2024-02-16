@@ -2,6 +2,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -47,5 +48,11 @@ export class UsersController {
       payload.username,
       payload.password,
     );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async deleteUser(@Req() req: any) {
+    return await this.usersService.delUser(req.user.id as number);
   }
 }
