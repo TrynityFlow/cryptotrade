@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOpDto } from './operations.dto';
 import { WalletService } from '../wallet/wallet.service';
@@ -45,5 +49,18 @@ export class OperationsService {
         partial_price: price,
       },
     });
+  }
+
+  async delOp(userId: number, opId: number) {
+    try {
+      return await this.prisma.operation.delete({
+        where: {
+          user_id: userId,
+          id: opId,
+        },
+      });
+    } catch (err) {
+      throw new NotFoundException('Record not found');
+    }
   }
 }

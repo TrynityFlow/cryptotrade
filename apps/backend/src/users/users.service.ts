@@ -1,4 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
 
@@ -43,7 +49,7 @@ export class UsersService {
         },
       });
     } catch (error) {
-      return { error: error };
+      throw new BadRequestException('User already exists');
     }
   }
 
@@ -60,7 +66,7 @@ export class UsersService {
         },
       });
     } catch (error) {
-      return { error: error };
+      throw new InternalServerErrorException();
     }
   }
 
@@ -77,7 +83,47 @@ export class UsersService {
         },
       });
     } catch (error) {
-      return { error: error };
+      throw new BadRequestException('User already exists');
+    }
+  }
+
+  async delUser(userId: number, pass: string) {
+    const dbPass = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        password: true,
+      },
+    });
+
+    if (!dbPass) throw new NotFoundException('user not found');
+
+    if (!bcrypt.compareSync(pass, dbPass.password)) {
+      throw new UnauthorizedException();
+    }
+
+    try {
+      const [, user] = await this.prisma.$transaction([
+        this.prisma.operation.deleteMany({
+          where: {
+            user_id: userId,
+          },
+        }),
+        this.prisma.user.delete({
+          where: {
+            id: userId,
+          },
+          select: {
+            id: true,
+            username: true,
+          },
+        }),
+      ]);
+
+      return user;
+    } catch (error) {
+      throw new NotFoundException('User not found');
     }
   }
 }

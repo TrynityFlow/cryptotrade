@@ -2,8 +2,8 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  InternalServerErrorException,
   Patch,
   Post,
   Req,
@@ -13,6 +13,7 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { PatchPasswordDto, PatchUsernameDto } from './patchUser.dto';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './createUser.dto';
+import { DeleteUserDto } from './delUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,31 +22,40 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getProfile(@Req() req: any) {
-    if (!req.user?.id) throw new InternalServerErrorException();
-
-    return await this.usersService.findById(req.user.id);
+    return await this.usersService.findById(req.user.id as number);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/username')
   async patchUsername(@Req() req: any, @Body() payload: PatchUsernameDto) {
-    if (!req.user?.id) throw new InternalServerErrorException();
-
-    return await this.usersService.patchUsername(req.user.id, payload.username);
+    return await this.usersService.patchUsername(
+      req.user.id as number,
+      payload.username,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/password')
   async patchPassword(@Req() req: any, @Body() payload: PatchPasswordDto) {
-    if (!req.user?.id) throw new InternalServerErrorException();
-
-    return await this.usersService.patchPassword(req.user.id, payload.password);
+    return await this.usersService.patchPassword(
+      req.user.id as number,
+      payload.password,
+    );
   }
 
   @Post()
   async createUser(@Body() payload: CreateUserDto) {
     return await this.usersService.createUser(
       payload.username,
+      payload.password,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async deleteUser(@Req() req: any, @Body() payload: DeleteUserDto) {
+    return await this.usersService.delUser(
+      req.user.id as number,
       payload.password,
     );
   }
