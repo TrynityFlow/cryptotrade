@@ -1,10 +1,10 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import './globals.css';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
