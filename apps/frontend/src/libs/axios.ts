@@ -81,3 +81,23 @@ export async function createOperation(
     return error;
   }
 }
+
+export async function delOperation(id: number) {
+  try {
+    return await axios.delete(`operations/${id}`);
+  } catch (error) {
+    return error;
+  }
+}
+
+export async function deluser(pass: string) {
+  try {
+    return await axios.delete('users', {
+      data: {
+        password: pass,
+      },
+    });
+  } catch (error) {
+    return error;
+  }
+}
