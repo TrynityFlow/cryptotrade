@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import bcrypt from 'bcrypt';
 
@@ -43,7 +47,7 @@ export class UsersService {
         },
       });
     } catch (error) {
-      return { error: error };
+      throw new BadRequestException('User already exists');
     }
   }
 
@@ -60,7 +64,7 @@ export class UsersService {
         },
       });
     } catch (error) {
-      return { error: error };
+      throw new InternalServerErrorException();
     }
   }
 
@@ -77,7 +81,7 @@ export class UsersService {
         },
       });
     } catch (error) {
-      return { error: error };
+      throw new BadRequestException('User already exists');
     }
   }
 }
