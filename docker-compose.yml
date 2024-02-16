@@ -6,15 +6,15 @@ services:
       context: .
       dockerfile: ./apps/backend/Dockerfile
     ports:
-      - "4000:4000"
+      - '4000:4000'
     env_file:
       - .env
   crypto-db:
-    image: "mysql"
+    image: 'mysql'
     env_file:
       - .sql-env
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - db-data:/crypto
 
