@@ -1,7 +1,4 @@
-# Build the docker image with `npx nx docker-build backend`.
-# Tip: Modify "docker-build" options in project.json to change docker build args.
-#
-# Run the container with `docker run -p 4000:4000 -t backend`.
+# Run the container with `docker run --network=host -p 4000:4000 --env -t crypto-trade-api`.
 FROM docker.io/node:lts-alpine
 
 ENV HOST=0.0.0.0
@@ -21,5 +18,7 @@ RUN chown -R backend:backend .
 
 RUN npm --omit=dev -f install
 RUN npx prisma generate
+
+EXPOSE 4000
 
 CMD [ "node", "main.js" ]
