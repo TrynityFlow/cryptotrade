@@ -22,7 +22,11 @@ export class OperationsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getOps(@Req() req: any, @Query() query: GetOpDto) {
-    return this.opService.getAllOpsOfUser(req.user.id as number, query.page, query.count);
+    return this.opService.getAllOpsOfUser(
+      req.user.id as number,
+      query.page,
+      query.count,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -34,7 +38,6 @@ export class OperationsController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteOp(@Param('id', ParseIntPipe) opId: number, @Req() req: any) {
-    return await this.opService.delOp(req.user.id as number, opId)
+    return await this.opService.delOp(req.user.id as number, opId);
   }
-
 }

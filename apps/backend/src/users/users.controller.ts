@@ -26,13 +26,19 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Patch('me/username')
   async patchUsername(@Req() req: any, @Body() payload: PatchUsernameDto) {
-    return await this.usersService.patchUsername(req.user.id as number, payload.username);
+    return await this.usersService.patchUsername(
+      req.user.id as number,
+      payload.username,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('me/password')
   async patchPassword(@Req() req: any, @Body() payload: PatchPasswordDto) {
-    return await this.usersService.patchPassword(req.user.id as number, payload.password);
+    return await this.usersService.patchPassword(
+      req.user.id as number,
+      payload.password,
+    );
   }
 
   @Post()

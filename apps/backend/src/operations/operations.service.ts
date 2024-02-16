@@ -51,8 +51,8 @@ export class OperationsService {
     return await this.prisma.operation.delete({
       where: {
         user_id: userId,
-        id: opId
-      }
-    })
+        id: opId,
+      },
+    });
   }
 }
