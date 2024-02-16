@@ -46,4 +46,13 @@ export class OperationsService {
       },
     });
   }
+
+  async delOp(userId: number, opId: number) {
+    return await this.prisma.operation.delete({
+      where: {
+        user_id: userId,
+        id: opId
+      }
+    })
+  }
 }

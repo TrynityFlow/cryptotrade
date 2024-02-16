@@ -2,8 +2,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  InternalServerErrorException,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -20,15 +22,19 @@ export class OperationsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getOps(@Req() req: any, @Query() query: GetOpDto) {
-    if (!req.user.id) throw new InternalServerErrorException();
-    return this.opService.getAllOpsOfUser(req.user.id, query.page, query.count);
+    return this.opService.getAllOpsOfUser(req.user.id as number, query.page, query.count);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   async createOp(@Req() req: any, @Body() payload: CreateOpDto) {
-    if (!req.user.id) throw new InternalServerErrorException();
-
-    return await this.opService.insertOp(req.user.id, payload);
+    return await this.opService.insertOp(req.user.id as number, payload);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteOp(@Param('id', ParseIntPipe) opId: number, @Req() req: any) {
+    return await this.opService.delOp(req.user.id as number, opId)
+  }
+
 }
