@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createOperation,
   delOperation,
@@ -9,36 +9,40 @@ import {
   login,
   register,
 } from '../libs/axios';
-import { queryClient } from '../pages/_app';
 
 const USER_KEY = 'user';
 const OP_KEY = 'op';
 
 export function useProfile() {
-  return useQuery(USER_KEY, getProfile);
+  return useQuery({ queryKey: [USER_KEY], queryFn: getProfile });
 }
 
 export function useHistory(page = 1, count = 10) {
-  return useQuery(OP_KEY, async () => {
-    await getHistory(page, count);
+  return useQuery({
+    queryKey: [OP_KEY],
+    queryFn: async () => await getHistory(page, count),
   });
 }
 
 export function useAssets() {
-  return useQuery(OP_KEY, getAssets);
+  return useQuery({ queryKey: [OP_KEY], queryFn: getAssets });
 }
 
 export function useLogin(name: string, pass: string) {
-  return useMutation(async () => await login(name, pass), {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => await login(name, pass),
     onSuccess: () => {
-      queryClient.invalidateQueries(OP_KEY);
+      queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
   });
 }
 
 export function useRegister(name: string, pass: string) {
-  return useQuery(USER_KEY, async () => {
-    await register(name, pass);
+  return useQuery({
+    queryKey: [USER_KEY],
+    queryFn: async () => await register(name, pass),
   });
 }
 
@@ -48,28 +52,35 @@ export function usePostOperation(
   costPerAsset: number,
   sell: boolean,
 ) {
-  return useMutation(
-    async () => await createOperation(currency, amount, costPerAsset, sell),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(OP_KEY);
-      },
-    },
-  );
-}
+  const queryClient = useQueryClient();
 
-export function useDelUser(pass: string) {
-  return useMutation(async () => await deluser(pass), {
+  return useMutation({
+    mutationFn: async () =>
+      await createOperation(currency, amount, costPerAsset, sell),
     onSuccess: () => {
-      queryClient.invalidateQueries([USER_KEY, OP_KEY]);
+      queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
   });
 }
 
-export function useDelOperation() {
-  return useMutation(delOperation, {
+export function useDelUser(pass: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => await deluser(pass),
     onSuccess: () => {
-      queryClient.invalidateQueries(OP_KEY);
+      queryClient.invalidateQueries({ queryKey: [USER_KEY, OP_KEY] });
+    },
+  });
+}
+
+export function useDelOperation(id: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => await delOperation(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
   });
 }
