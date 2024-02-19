@@ -3,12 +3,12 @@ import Head from 'next/head';
 import './globals.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Noto_Sans } from 'next/font/google'
+import { Noto_Sans } from 'next/font/google';
 
 const noto = Noto_Sans({
   subsets: ['latin-ext'],
-  variable: '--font-noto'
-})
+  variable: '--font-noto',
+});
 
 export const queryClient = new QueryClient();
 
