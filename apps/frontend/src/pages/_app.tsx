@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Noto_Sans as FontSans } from 'next/font/google';
 import { Nav } from '../components/layout';
 import { cn } from '@cryptotrade/ui-components';
+import {NextUIProvider} from "@nextui-org/react";
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -17,9 +18,17 @@ export const queryClient = new QueryClient();
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+      <NextUIProvider>
       <Head>
-        <title>Welcome to frontend!</title>
+        <title>CryptoTrade</title>
       </Head>
+      <style global jsx>
+        {`
+          html {
+            font-family: ${fontSans.style.fontFamily};
+          }
+        `}
+      </style>
       <span
         className={cn(
           'bg-background min-h-screen font-sans antialiased',
@@ -32,6 +41,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
         </main>
       </span>
       <ReactQueryDevtools />
+      </NextUIProvider>
     </QueryClientProvider>
   );
 }
