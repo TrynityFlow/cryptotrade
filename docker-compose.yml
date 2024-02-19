@@ -7,10 +7,15 @@ services:
       dockerfile: ./apps/backend/Dockerfile
     ports:
       - '4000:4000'
+    environment:
+      - DB_URL="mysql://root:pass@localhost:3306/crypto"
     env_file:
       - .env
   crypto-db:
     image: 'mysql'
+    environment:
+      - MYSQL_DATABASE="crypto"
+      - MYSQL_ROOT_PASSWORD="pass"
     env_file:
       - .sql-env
     ports:
