@@ -1,5 +1,12 @@
 export function Index() {
-  return <div>HI</div>;
+  return (
+    <>
+      <div className="h-screen">hi</div>
+      <div className="h-screen">hi</div>
+      <div className="h-screen">hi</div>
+      <div className="h-screen">hi</div>
+    </>
+  );
 }
 
 export default Index;

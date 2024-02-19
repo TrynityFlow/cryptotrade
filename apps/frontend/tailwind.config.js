@@ -39,6 +39,9 @@ module.exports = {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        nav: {
+          DEFAULT: 'hsla(var(--background-nav))',
+        },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
@@ -62,7 +65,7 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['var(--font-noto)', ...fontFamily.sans],
+        sans: ['var(--font-sans)', ...fontFamily.sans],
       },
       keyframes: {
         'accordion-down': {
@@ -78,6 +81,11 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundOpacity: ['active'],
     },
   },
   plugins: [require('tailwindcss-animate')],

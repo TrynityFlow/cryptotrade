@@ -3,11 +3,13 @@ import Head from 'next/head';
 import './globals.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Noto_Sans } from 'next/font/google';
+import { Noto_Sans as FontSans } from 'next/font/google';
+import { Nav } from '../components/layout';
+import { cn } from '@cryptotrade/ui-components';
 
-const noto = Noto_Sans({
-  subsets: ['latin-ext'],
-  variable: '--font-noto',
+export const fontSans = FontSans({
+  subsets: ['latin'],
+  variable: '--font-sans',
 });
 
 export const queryClient = new QueryClient();
@@ -18,9 +20,17 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to frontend!</title>
       </Head>
-      <main className={`app ${noto.variable}`}>
-        <Component {...pageProps} />
-      </main>
+      <span
+        className={cn(
+          'bg-background min-h-screen font-sans antialiased',
+          fontSans.variable,
+        )}
+      >
+        <Nav />
+        <main className={`app`}>
+          <Component {...pageProps} />
+        </main>
+      </span>
       <ReactQueryDevtools />
     </QueryClientProvider>
   );
