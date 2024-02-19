@@ -27,7 +27,7 @@ export class WalletService {
     group.map((current) => {
       const id = current.currency_id;
       if (!cryptoMap.has(id))
-        cryptoMap.set(id, { balance: 0, amount: 0, avg_sell: 0, avg_buy: 0 });
+        cryptoMap.set(id, {symbol: id, balance: 0, amount: 0, avg_sell: 0, avg_buy: 0 });
 
       cryptoMap.get(id).balance += current._sum.price * (current.sell ? -1 : 1);
       cryptoMap.get(id).amount += current._sum.amount * (current.sell ? -1 : 1);

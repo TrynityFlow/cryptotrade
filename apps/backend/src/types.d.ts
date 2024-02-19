@@ -14,6 +14,7 @@ export type Operation = {
 };
 
 export type Balance = {
+  symbol: string,
   balance: number;
   amount: number;
   avg_sell: number;
