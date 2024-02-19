@@ -1,34 +1,51 @@
-"use client";
+'use client';
 
 import * as React from 'react';
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenu, NavbarMenuItem, NavbarMenuToggle} from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+} from '@nextui-org/react';
 import Image from 'next/image';
 
 export function Nav() {
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-    const menuItems = [
-      ["Home page", "/"],
-      ["Wallet", "/wallet"],
-      ["History", "/history"],
-      ["Trade", "/trade"],
-    ];
+  const menuItems = [
+    ['Home page', '/'],
+    ['Wallet', '/wallet'],
+    ['History', '/history'],
+    ['Trade', '/trade'],
+  ];
   return (
-<Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="sm:hidden"
         />
         <NavbarBrand>
-          <Link href='/' color='foreground'>
-          <Image src="/logo.png" width={40} height={40} alt='logo' aria-hidden className='mr-2'/>
-          <p className="font-bold">Crypto Trade</p>
+          <Link href="/" color="foreground">
+            <Image
+              src="/logo.png"
+              width={40}
+              height={40}
+              alt="logo"
+              aria-hidden
+              className="mr-2"
+            />
+            <p className="font-bold">Crypto Trade</p>
           </Link>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         <NavbarItem>
           <Link color="foreground" href="#">
             Wallet

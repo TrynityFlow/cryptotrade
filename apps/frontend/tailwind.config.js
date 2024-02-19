@@ -2,7 +2,7 @@
 const { fontFamily } = require('tailwindcss/defaultTheme');
 const { createGlobPatternsForDependencies } = require('@nx/react/tailwind');
 const { join } = require('path');
-const {nextui} = require("@nextui-org/react");
+const { nextui } = require('@nextui-org/react');
 
 module.exports = {
   darkMode: ['class'],
@@ -13,7 +13,7 @@ module.exports = {
     ),
     join(
       __dirname,
-      '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
+      '../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
     ),
     ...createGlobPatternsForDependencies(__dirname),
   ],
@@ -72,7 +72,6 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
       },
-
     },
   },
   variants: {
@@ -81,10 +80,10 @@ module.exports = {
     },
   },
   plugins: [
-    require('tailwindcss-animate'), 
+    require('tailwindcss-animate'),
     nextui({
       defaultTheme: 'dark',
       defaultExtendTheme: 'dark',
-    })
+    }),
   ],
 };
