@@ -26,6 +26,9 @@ module.exports = {
       },
     },
     extend: {
+      backgroundImage: {
+        'login-pattern': "url('/login-pattern.jpg')",
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
