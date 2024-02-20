@@ -1,4 +1,5 @@
 import { Input } from '@nextui-org/react';
+import { InputError } from './error';
 
 interface IField {
   name: string;
@@ -21,7 +22,7 @@ export const InputField = ({
   endContent = '',
 }: Props) => {
   return (
-    <div>
+    <div className="w-full md:max-w-sm">
       <Input
         type={type}
         label={label}
@@ -29,10 +30,10 @@ export const InputField = ({
         key={`${type}-${label}`}
         radius="sm"
         endContent={endContent}
-        className="md:max-w-sm w-full"
+        className="w-full"
         {...field}
       />
-      {meta.touched && meta.error}
+      <InputError>{meta.touched && meta.error}</InputError>
     </div>
   );
 };

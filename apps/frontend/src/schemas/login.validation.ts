@@ -11,7 +11,7 @@ export const LoginSchema = Yup.object().shape({
     .required('This field is required'),
 
   password: Yup.string()
-    .min(8, 'PToo Short!')
+    .min(8, 'Too Short!')
     .minLowercase(1, 'Must contain at least 1 lower case letter')
     .minUppercase(1, 'Must contain at least 1 upper case letter')
     .minNumbers(1, 'Must contain at least 1 number')
