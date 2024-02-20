@@ -21,7 +21,7 @@ export const InputField = ({
   endContent = '',
 }: Props) => {
   return (
-    <>
+    <div>
       <Input
         type={type}
         label={label}
@@ -29,10 +29,10 @@ export const InputField = ({
         key={`${type}-${label}`}
         radius="sm"
         endContent={endContent}
-        className="max-w-sm"
+        className="md:max-w-sm w-full"
         {...field}
       />
       {meta.touched && meta.error}
-    </>
+    </div>
   );
 };

@@ -25,7 +25,8 @@ export const LoginForm = () => {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   return (
-    <div className="bg-background h-full md:w-5/12">
+    <div className="bg-background h-full md:w-5/12 w-full px-8 flex items-center py-4 justify-center flex-col">
+      <header className='mb-6 font-bold text-2xl'>Welcome to Crypto Trade</header>
       <Formik
         validationSchema={LoginSchema}
         initialValues={{
@@ -36,7 +37,7 @@ export const LoginForm = () => {
           console.log(values);
         }}
       >
-        <Form>
+        <Form className='flex w-full items-center justify-center flex-col gap-y-4'>
           <Field name="username">
             {({ field, meta }: IField) => {
               return (
@@ -72,7 +73,7 @@ export const LoginForm = () => {
               />
             )}
           </Field>
-          <Submit />
+          <Submit>Sign in</Submit>
         </Form>
       </Formik>
     </div>

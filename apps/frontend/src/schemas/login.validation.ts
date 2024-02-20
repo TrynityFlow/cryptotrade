@@ -11,10 +11,10 @@ export const LoginSchema = Yup.object().shape({
     .required('This field is required'),
 
   password: Yup.string()
-    .min(8, 'Password is Too Short!')
-    .minLowercase(1, 'Password must contain at least 1 lower case letter')
-    .minUppercase(1, 'Password must contain at least 1 upper case letter')
-    .minNumbers(1, 'Password must contain at least 1 number')
-    .minSymbols(1, 'Password must contain at least 1 special character')
+    .min(8, 'PToo Short!')
+    .minLowercase(1, 'Must contain at least 1 lower case letter')
+    .minUppercase(1, 'Must contain at least 1 upper case letter')
+    .minNumbers(1, 'Must contain at least 1 number')
+    .minSymbols(1, 'Must contain at least 1 special character')
     .required('This field is required'),
 });

@@ -1,5 +1,5 @@
 import { Button } from '@nextui-org/react';
 
-export const Submit = () => {
-  return <Button type="submit">Log in</Button>;
+export const Submit = ({children}: React.PropsWithChildren) => {
+  return <Button type="submit" color='success' className='w-full md:max-w-sm' size='lg'>{children}</Button>;
 };
