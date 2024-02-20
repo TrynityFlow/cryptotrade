@@ -1,5 +1,7 @@
+import { MainLayout } from '../layouts';
+
 export function Index() {
-  return <></>;
+  return <MainLayout>Hello</MainLayout>;
 }
 
 export default Index;

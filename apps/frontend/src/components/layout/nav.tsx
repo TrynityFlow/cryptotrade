@@ -47,12 +47,12 @@ export function Nav() {
 
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/wallet">
             Wallet
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link color="foreground" href="#" aria-current="page">
+        <NavbarItem>
+          <Link color="foreground" href="/history">
             History
           </Link>
         </NavbarItem>
