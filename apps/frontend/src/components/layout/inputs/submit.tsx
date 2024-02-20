@@ -1,9 +1,5 @@
-import { Button } from "@nextui-org/react"
+import { Button } from '@nextui-org/react';
 
 export const Submit = () => {
-    return (
-        <Button type="submit">
-            Log in
-        </Button>
-    )
-}
+  return <Button type="submit">Log in</Button>;
+};

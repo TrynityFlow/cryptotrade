@@ -1,26 +1,28 @@
 'use client';
 
 import React from 'react';
-import {Field, Form, Formik} from 'formik'
+import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
 import { InputField } from '../layout';
 import { LoginSchema } from '../../schemas/login.validation';
 import { Submit } from '../layout/inputs/submit';
 
+interface IField {
+  field: {
+    name: string;
+    value: string;
+  };
+  meta: {
+    touched: boolean;
+    error: string;
+  };
+}
+
 export const LoginForm = () => {
   const [isVisible, setIsVisible] = React.useState(false);
-  const [passValue, setPassValue] = React.useState('');
-  const [userValue, setUserValue] = React.useState('');
 
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const inputHandler = (
-    setFn: React.Dispatch<React.SetStateAction<string>>,
-  ) => {
-    return (e: React.FormEvent<HTMLInputElement>) => {
-      setFn(e.currentTarget.value);
-    };
-  };
 
   return (
     <div className="bg-background h-full md:w-5/12">
@@ -28,28 +30,32 @@ export const LoginForm = () => {
         validationSchema={LoginSchema}
         initialValues={{
           username: '',
-          password: '' 
+          password: '',
         }}
-        onSubmit={values => {
-          console.log(values)
+        onSubmit={(values) => {
+          console.log(values);
         }}
       >
-        {({ errors, touched }) => (
-          <Form>
-          <Field
-            name='username'
-            type="text"
-            label="Username"
-            value={userValue}
-            setValue={inputHandler(setUserValue)}
-            component={InputField}
-          />
-          <Field 
-                name='password'
-                type={isVisible ? 'text' : 'password'}
-                setValue={inputHandler(setPassValue)}
-                value={passValue}
+        <Form>
+          <Field name="username">
+            {({ field, meta }: IField) => {
+              return (
+                <InputField
+                  label="Username"
+                  type="text"
+                  field={field}
+                  meta={meta}
+                />
+              );
+            }}
+          </Field>
+          <Field name="password">
+            {({ field, meta }: IField) => (
+              <InputField
                 label="Password"
+                type={isVisible ? 'text' : 'password'}
+                field={field}
+                meta={meta}
                 endContent={
                   <button
                     className="focus:outline-none"
@@ -63,12 +69,11 @@ export const LoginForm = () => {
                     )}
                   </button>
                 }
-                component={InputField}
-          />
+              />
+            )}
+          </Field>
           <Submit />
-          </Form>
-        )}
-      
+        </Form>
       </Formik>
     </div>
   );
