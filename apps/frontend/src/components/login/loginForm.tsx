@@ -10,6 +10,7 @@ import { Submit } from '../layout/inputs/submit';
 import { useLogin } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
 import { LoginContext } from '../../libs/loginContext';
+import { InputError } from '../layout/inputs/error';
 
 interface IField {
   field: {
@@ -26,7 +27,7 @@ export const LoginForm = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const router = useRouter();
   const { updateUser } = useContext(LoginContext);
-  const { mutate, data, error, isSuccess, isPending } = useLogin();
+  const { mutate, data, isError, isSuccess, isPending } = useLogin();
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const onSubmit = (values: Crypto.LoginFormData) => {
@@ -91,7 +92,7 @@ export const LoginForm = () => {
           </Field>
           <span className="mt-2"></span>
           <Submit isLoading={isPending}>Sign in</Submit>
-          <span className="mt-2">{error?.message}</span>
+          <InputError>{isError ? 'Unable Find Matching User!' : ''}</InputError>
         </Form>
       </Formik>
     </div>
