@@ -23,6 +23,8 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.TARGET_SITE || 'localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['*', 'Content-Type', 'content-Type', 'Authorization'],
   });
   app.use(helmet());
 

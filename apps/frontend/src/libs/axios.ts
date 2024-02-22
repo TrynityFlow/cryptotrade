@@ -14,54 +14,34 @@ const axios = Axios.create({
 });
 
 export async function getHistory(page: number, count: number) {
-  try {
-    return await axios.get('operations', {
-      params: {
-        page: page,
-        count: count,
-      },
-    });
-  } catch (error) {
-    return error;
-  }
+  return await axios.get('operations', {
+    params: {
+      page: page,
+      count: count,
+    },
+  });
 }
 
 export async function getProfile() {
-  try {
-    return await axios.get('users/me');
-  } catch (error) {
-    return error;
-  }
+  return await axios.get('users/me');
 }
 
 export async function getAssets() {
-  try {
-    return await axios.get('assets');
-  } catch (error) {
-    return error;
-  }
+  return await axios.get('assets');
 }
 
 export async function login(username: string, password: string) {
-  try {
-    return await axios.post('auth/login', {
-      username: username,
-      password: password,
-    });
-  } catch (error) {
-    return error;
-  }
+  return await axios.post<Request.User>('auth/login', {
+    username: username,
+    password: password,
+  });
 }
 
 export async function register(username: string, password: string) {
-  try {
-    return await axios.post('users', {
-      username: username,
-      password: password,
-    });
-  } catch (error) {
-    return error;
-  }
+  return await axios.post('users', {
+    username: username,
+    password: password,
+  });
 }
 
 export async function createOperation(
@@ -70,34 +50,22 @@ export async function createOperation(
   costPerAsset: number,
   sell: boolean,
 ) {
-  try {
-    return await axios.post('users', {
-      currency_id: currency,
-      amount: amount,
-      price: costPerAsset,
-      sell: sell,
-    });
-  } catch (error) {
-    return error;
-  }
+  return await axios.post('users', {
+    currency_id: currency,
+    amount: amount,
+    price: costPerAsset,
+    sell: sell,
+  });
 }
 
 export async function delOperation(id: number) {
-  try {
-    return await axios.delete(`operations/${id}`);
-  } catch (error) {
-    return error;
-  }
+  return await axios.delete(`operations/${id}`);
 }
 
 export async function deluser(pass: string) {
-  try {
-    return await axios.delete('users', {
-      data: {
-        password: pass,
-      },
-    });
-  } catch (error) {
-    return error;
-  }
+  return await axios.delete('users', {
+    data: {
+      password: pass,
+    },
+  });
 }

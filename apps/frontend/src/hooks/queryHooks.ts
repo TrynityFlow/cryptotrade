@@ -17,10 +17,10 @@ export function useProfile() {
   return useQuery({ queryKey: [USER_KEY], queryFn: getProfile });
 }
 
-export function useHistory(page = 1, count = 10) {
+export function useHistory() {
   return useQuery({
     queryKey: [OP_KEY],
-    queryFn: async () => await getHistory(page, count),
+    queryFn: async () => await getHistory(1, 1),
   });
 }
 
@@ -28,34 +28,40 @@ export function useAssets() {
   return useQuery({ queryKey: [OP_KEY], queryFn: getAssets });
 }
 
-export function useLogin(name: string, pass: string) {
+export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => await login(name, pass),
+    mutationFn: async ({ username, password }: Request.LoginData) =>
+      await login(username, password),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
   });
 }
 
-export function useRegister(name: string, pass: string) {
-  return useQuery({
-    queryKey: [USER_KEY],
-    queryFn: async () => await register(name, pass),
+export function useRegister() {
+  // const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ username, password }: Request.LoginData) =>
+      await register(username, password),
+    onSuccess: () => {
+      // queryClient.invalidateQueries({queryKey: []})
+    },
   });
 }
 
-export function usePostOperation(
-  currency: string,
-  amount: number,
-  costPerAsset: number,
-  sell: boolean,
-) {
+export function usePostOperation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () =>
+    mutationFn: async ({
+      currency,
+      amount,
+      costPerAsset,
+      sell,
+    }: Request.OpData) =>
       await createOperation(currency, amount, costPerAsset, sell),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OP_KEY] });
@@ -63,22 +69,22 @@ export function usePostOperation(
   });
 }
 
-export function useDelUser(pass: string) {
+export function useDelUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => await deluser(pass),
+    mutationFn: async (pass: string) => await deluser(pass),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USER_KEY, OP_KEY] });
     },
   });
 }
 
-export function useDelOperation(id: number) {
+export function useDelOperation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => await delOperation(id),
+    mutationFn: async (id: number) => await delOperation(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },

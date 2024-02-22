@@ -1,10 +1,16 @@
-import React from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-
+import React from 'react';
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from '@nextui-org/react';
 
 export default function ModalObj(Title: string, Text: string) {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
@@ -15,10 +21,7 @@ export default function ModalObj(Title: string, Text: string) {
             <>
               <ModalHeader className="flex flex-col gap-1">{Title}</ModalHeader>
               <ModalBody>
-                <p> 
-                    {Text}
-                </p>
-
+                <p>{Text}</p>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
