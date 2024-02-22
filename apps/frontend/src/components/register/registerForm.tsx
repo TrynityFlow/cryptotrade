@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
 import { InputField } from '../layout';
-import { LoginSchema } from '../../schemas/login.validation';
+import { RegisterSchema } from '../../schemas/register.validation';
 import { Submit } from '../layout/inputs/submit';
-import { useLogin } from '../../hooks/queryHooks';
+import { useRegister } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
+import { LoginContext } from '../../libs/loginContext';
 import { InputError } from '../layout/inputs/error';
 
 interface IField {
@@ -22,21 +23,23 @@ interface IField {
   };
 }
 
-export const LoginForm = () => {
+export const RegisterForm = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const router = useRouter();
-  const { mutate, data, isError, isSuccess, isPending } = useLogin();
+  const { updateUser } = useContext(LoginContext);
+  const { mutate, data, isError, isSuccess, isPending } = useRegister();
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const onSubmit = (values: Crypto.LoginFormData) => {
+  const onSubmit = (values: Crypto.RegisterFormData) => {
     mutate(values);
   };
 
   useEffect(() => {
     if (isSuccess) {
+      updateUser(data.data);
       router.push('/');
     }
-  }, [data, isSuccess, router]);
+  }, [data, isSuccess, router, updateUser]);
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-transparent px-8 py-4 md:w-5/12">
@@ -44,10 +47,11 @@ export const LoginForm = () => {
         Welcome to Crypto Trade
       </header>
       <Formik
-        validationSchema={LoginSchema}
+        validationSchema={RegisterSchema}
         initialValues={{
           username: '',
           password: '',
+          repeat: '',
         }}
         onSubmit={onSubmit}
       >
@@ -87,9 +91,19 @@ export const LoginForm = () => {
               />
             )}
           </Field>
+          <Field name="repeat">
+            {({ field, meta }: IField) => (
+              <InputField
+                label="Confirm Password"
+                type="password"
+                field={field}
+                meta={meta}
+              />
+            )}
+          </Field>
           <span className="mt-2"></span>
-          <Submit isLoading={isPending}>Sign in</Submit>
-          <InputError>{isError ? 'Unable Find Matching User!' : ''}</InputError>
+          <Submit isLoading={isPending}>Sign up</Submit>
+          <InputError>{isError ? 'User already exists!' : ''}</InputError>
         </Form>
       </Formik>
     </div>

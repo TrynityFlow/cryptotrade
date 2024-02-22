@@ -23,7 +23,7 @@ export async function getHistory(page: number, count: number) {
 }
 
 export async function getProfile() {
-  return await axios.get('users/me');
+  return await axios.get<Request.User>('users/me');
 }
 
 export async function getAssets() {

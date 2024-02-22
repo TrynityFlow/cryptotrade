@@ -7,8 +7,7 @@ import { Noto_Sans as FontSans } from 'next/font/google';
 import { cn } from '@cryptotrade/ui-components';
 import { NextUIProvider } from '@nextui-org/react';
 import { LoginContext } from '../libs/loginContext';
-import { useEffect, useState } from 'react';
-import { useStorage } from '../hooks/useStorage';
+import { useState } from 'react';
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -19,21 +18,11 @@ export const queryClient = new QueryClient();
 
 function CustomApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<Request.User>();
-  const [name, setName] = useStorage('user-name');
-  const [id, setId] = useStorage('user-id');
-  useEffect(() => {
-    setUser({ id: id, username: name });
-  }, [id, name]);
-
-  const upUser = (u: Request.User) => {
-    setName(u.username);
-    setId(u.id);
-  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
-        <LoginContext.Provider value={{ user: user, updateUser: upUser }}>
+        <LoginContext.Provider value={{ user: user, updateUser: setUser }}>
           <Head>
             <title>CryptoTrade</title>
           </Head>
