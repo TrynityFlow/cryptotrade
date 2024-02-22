@@ -1,12 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
 import { InputField } from '../layout';
 import { LoginSchema } from '../../schemas/login.validation';
 import { Submit } from '../layout/inputs/submit';
+import { useLogin } from '../../hooks/queryHooks';
+import { useRouter } from 'next/router';
+import { LoginContext } from '../../libs/loginContext';
 
 interface IField {
   field: {
@@ -21,8 +24,21 @@ interface IField {
 
 export const LoginForm = () => {
   const [isVisible, setIsVisible] = React.useState(false);
-
+  const router = useRouter();
+  const { updateUser } = useContext(LoginContext);
+  const { mutate, data, error, isSuccess } = useLogin();
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const onSubmit = (values: Crypto.LoginFormData) => {
+    mutate(values);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      updateUser(data.data);
+      router.push('/');
+    }
+  }, [data, isSuccess, router, updateUser]);
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-transparent px-8 py-4 md:w-5/12">
@@ -35,9 +51,7 @@ export const LoginForm = () => {
           username: '',
           password: '',
         }}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        onSubmit={onSubmit}
       >
         <Form className="flex w-full flex-col items-center justify-center gap-y-5">
           <Field name="username">
@@ -77,6 +91,7 @@ export const LoginForm = () => {
           </Field>
           <span className="mt-2"></span>
           <Submit>Sign in</Submit>
+          <span className="mt-2">{error?.message}</span>
         </Form>
       </Formik>
     </div>
