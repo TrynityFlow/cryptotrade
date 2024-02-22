@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
@@ -9,7 +9,6 @@ import { LoginSchema } from '../../schemas/login.validation';
 import { Submit } from '../layout/inputs/submit';
 import { useLogin } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
-import { LoginContext } from '../../libs/loginContext';
 import { InputError } from '../layout/inputs/error';
 
 interface IField {
@@ -26,7 +25,6 @@ interface IField {
 export const LoginForm = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const router = useRouter();
-  const { updateUser } = useContext(LoginContext);
   const { mutate, data, isError, isSuccess, isPending } = useLogin();
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -36,10 +34,9 @@ export const LoginForm = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      updateUser(data.data);
       router.push('/');
     }
-  }, [data, isSuccess, router, updateUser]);
+  }, [data, isSuccess, router]);
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-transparent px-8 py-4 md:w-5/12">
