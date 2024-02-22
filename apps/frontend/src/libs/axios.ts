@@ -13,8 +13,11 @@ const axios = Axios.create({
   withCredentials: true,
 });
 
-export async function getHistory(page: number, count: number) {
-  return await axios.get('operations', {
+export async function getHistory({
+  page = 1,
+  count = 1,
+}: Request.HistoryParams) {
+  return await axios.get<Request.Operation[]>('operations', {
     params: {
       page: page,
       count: count,
@@ -27,30 +30,30 @@ export async function getProfile() {
 }
 
 export async function getAssets() {
-  return await axios.get('assets');
+  return await axios.get<Request.Asset[]>('assets');
 }
 
-export async function login(username: string, password: string) {
+export async function login({ username, password }: Request.LoginData) {
   return await axios.post<Request.User>('auth/login', {
     username: username,
     password: password,
   });
 }
 
-export async function register(username: string, password: string) {
-  return await axios.post('users', {
+export async function register({ username, password }: Request.LoginData) {
+  return await axios.post<Request.User>('users', {
     username: username,
     password: password,
   });
 }
 
-export async function createOperation(
-  currency: string,
-  amount: number,
-  costPerAsset: number,
-  sell: boolean,
-) {
-  return await axios.post('users', {
+export async function createOperation({
+  amount,
+  costPerAsset,
+  currency,
+  sell,
+}: Request.OpData) {
+  return await axios.post<Request.Operation>('users', {
     currency_id: currency,
     amount: amount,
     price: costPerAsset,
@@ -59,11 +62,11 @@ export async function createOperation(
 }
 
 export async function delOperation(id: number) {
-  return await axios.delete(`operations/${id}`);
+  return await axios.delete<Request.Operation>(`operations/${id}`);
 }
 
 export async function deluser(pass: string) {
-  return await axios.delete('users', {
+  return await axios.delete<Request.User>('users', {
     data: {
       password: pass,
     },

@@ -17,10 +17,10 @@ export function useProfile() {
   return useQuery({ queryKey: [USER_KEY], queryFn: getProfile });
 }
 
-export function useHistory() {
+export function useHistory(params: Request.HistoryParams) {
   return useQuery({
     queryKey: [OP_KEY],
-    queryFn: async () => await getHistory(1, 1),
+    queryFn: async () => await getHistory(params),
   });
 }
 
@@ -32,8 +32,7 @@ export function useLogin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ username, password }: Request.LoginData) =>
-      await login(username, password),
+    mutationFn: async (data: Request.LoginData) => await login(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
@@ -41,13 +40,12 @@ export function useLogin() {
 }
 
 export function useRegister() {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ username, password }: Request.LoginData) =>
-      await register(username, password),
+    mutationFn: async (data: Request.LoginData) => await register(data),
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey: []})
+      queryClient.invalidateQueries({ queryKey: [] });
     },
   });
 }
@@ -56,13 +54,7 @@ export function usePostOperation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      currency,
-      amount,
-      costPerAsset,
-      sell,
-    }: Request.OpData) =>
-      await createOperation(currency, amount, costPerAsset, sell),
+    mutationFn: async (data: Request.OpData) => await createOperation(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
