@@ -1,5 +1,9 @@
+import { useContext } from 'react';
 import { MainLayout } from '../layouts';
+import { LoginContext } from '../libs/loginContext';
 
 export default function HistoryPage() {
-  return <MainLayout></MainLayout>;
+  const { user } = useContext(LoginContext);
+
+  return <MainLayout>{user?.username}</MainLayout>;
 }

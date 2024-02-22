@@ -6,8 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Noto_Sans as FontSans } from 'next/font/google';
 import { cn } from '@cryptotrade/ui-components';
 import { NextUIProvider } from '@nextui-org/react';
-import { LoginContext } from '../libs/loginContext';
-import { useState } from 'react';
+import { LoginContextProvider } from '../libs/loginContext';
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -17,12 +16,10 @@ export const fontSans = FontSans({
 export const queryClient = new QueryClient();
 
 function CustomApp({ Component, pageProps }: AppProps) {
-  const [user, setUser] = useState<Request.User>();
-
   return (
     <QueryClientProvider client={queryClient}>
       <NextUIProvider>
-        <LoginContext.Provider value={{ user: user, updateUser: setUser }}>
+        <LoginContextProvider>
           <Head>
             <title>CryptoTrade</title>
           </Head>
@@ -42,7 +39,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </main>
           <ReactQueryDevtools />
-        </LoginContext.Provider>
+        </LoginContextProvider>
       </NextUIProvider>
     </QueryClientProvider>
   );
