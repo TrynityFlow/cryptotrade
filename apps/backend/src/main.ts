@@ -36,4 +36,15 @@ async function bootstrap() {
   );
 }
 
-bootstrap();
+function main() {
+  try {
+    Logger.log('Bootstraping...');
+    bootstrap();
+  } catch (error: unknown) {
+    Logger.error(error);
+    Logger.warn('Retrying...');
+    setTimeout(main, 5000);
+  }
+}
+
+main();
