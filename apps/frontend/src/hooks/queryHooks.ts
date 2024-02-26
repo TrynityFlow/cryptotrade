@@ -44,8 +44,9 @@ export function useRegister() {
 
   return useMutation({
     mutationFn: async (data: Request.LoginData) => await register(data),
+    mutationKey: [USER_KEY],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [] });
+      queryClient.invalidateQueries({ queryKey: [USER_KEY] });
     },
   });
 }

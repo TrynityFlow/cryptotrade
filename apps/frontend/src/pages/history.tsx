@@ -1,9 +1,15 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MainLayout } from '../layouts';
 import { LoginContext } from '../libs/loginContext';
+import { useRouter } from 'next/router';
 
 export default function HistoryPage() {
   const { user } = useContext(LoginContext);
+  const router = useRouter();
 
-  return <MainLayout>{user?.username}</MainLayout>;
+  useEffect(() => {
+    if (!user) router.push('/login');
+  }, [router, user]);
+
+  return <MainLayout></MainLayout>;
 }

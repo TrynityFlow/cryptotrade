@@ -4,12 +4,12 @@ import React, { useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
-import { InputField } from '../layout';
+import { InputField } from '../ui';
 import { LoginSchema } from '../../schemas/login.validation';
-import { Submit } from '../layout/inputs/submit';
+import { Submit } from '../ui/inputs/submit';
 import { useLogin } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
-import { InputError } from '../layout/inputs/error';
+import { InputError } from '../ui/inputs/error';
 
 interface IField {
   field: {
