@@ -41,6 +41,9 @@ declare namespace Request {
     changePercent24Hr: string;
     vwap24Hr: string;
   };
+  type CryptoSingle = {
+    data: Crypto;
+  };
 
   type CryptoArray = {
     data: Crypto[];
