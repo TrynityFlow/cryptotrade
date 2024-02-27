@@ -10,6 +10,7 @@ import { Submit } from '../ui/inputs/submit';
 import { useLogin } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
 import { InputError } from '../ui/inputs/error';
+import Link from 'next/link';
 
 interface IField {
   field: {
@@ -90,6 +91,9 @@ export const LoginForm = () => {
           <span className="mt-2"></span>
           <Submit isLoading={isPending}>Sign in</Submit>
           <InputError>{isError ? 'Unable Find Matching User!' : ''}</InputError>
+          <Link href="/register" className="text-primary-600">
+            Don&apos;t have an account yet?
+          </Link>
         </Form>
       </Formik>
     </div>

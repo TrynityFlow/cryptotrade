@@ -11,6 +11,7 @@ import { useRegister } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
 import { LoginContext } from '../../libs/loginContext';
 import { InputError } from '../ui/inputs/error';
+import Link from 'next/link';
 
 interface IField {
   field: {
@@ -104,6 +105,9 @@ export const RegisterForm = () => {
           <span className="mt-2"></span>
           <Submit isLoading={isPending}>Sign up</Submit>
           <InputError>{isError ? 'User already exists!' : ''}</InputError>
+          <Link href="/login" className="text-primary-600">
+            Already have an account?
+          </Link>
         </Form>
       </Formik>
     </div>
