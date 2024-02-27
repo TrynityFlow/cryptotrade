@@ -7,15 +7,13 @@ import {
   TableRow,
 } from '@nextui-org/react';
 import { useGetAllCrypto } from '../../hooks/queryHooks';
-import {
-  useCallback,
-} from 'react';
+import { useCallback } from 'react';
 import { ListElement } from './listElement';
 import { Submit } from '../ui/inputs/submit';
 
 export const CryptoList = () => {
-  const { data, isLoading,fetchNextPage } = useGetAllCrypto();
-  console.log()
+  const { data, isLoading, fetchNextPage } = useGetAllCrypto();
+  console.log();
   const columns = [
     { name: 'Id', uid: 'rank' },
     { name: 'Name', uid: 'name' },
@@ -74,7 +72,7 @@ export const CryptoList = () => {
     },
     [],
   );
-    const content = data?.pages.flatMap(i => i.data.data)
+  const content = data?.pages.flatMap((i) => i.data.data);
   return (
     <div className="flex flex-col items-center gap-6">
       <Table isStriped aria-label="Table of crypto currencies">
@@ -96,10 +94,9 @@ export const CryptoList = () => {
           )}
         </TableBody>
       </Table>
-      <Submit
-        onClick={() => fetchNextPage()}
-        isLoading={isLoading}
-      >Load More</Submit>
+      <Submit onClick={() => fetchNextPage()} isLoading={isLoading}>
+        Load More
+      </Submit>
     </div>
   );
 };

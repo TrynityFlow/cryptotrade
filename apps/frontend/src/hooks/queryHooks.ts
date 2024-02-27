@@ -102,11 +102,11 @@ export function useDelOperation() {
 
 export function useGetAllCrypto() {
   return useInfiniteQuery({
-      queryKey: [CRYPTO_KEY],
-      queryFn: getAllCrypto,
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, allPages) => allPages.length + 1,
-    });
+    queryKey: [CRYPTO_KEY],
+    queryFn: getAllCrypto,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => allPages.length + 1,
+  });
 }
 
 export function useGetCrypto() {
