@@ -81,9 +81,9 @@ export async function deluser(pass: string) {
   });
 }
 
-export async function getAllCrypto(limit: number, offset: number) {
+export async function getAllCrypto({pageParam}: {pageParam:number}) {
   return await coincap.get<Request.CryptoArray>(
-    `assets?limit=${limit}&offset=${offset}`,
+    `assets?limit=${20}&offset=${20*(pageParam - 1)}`,
   );
 }
 

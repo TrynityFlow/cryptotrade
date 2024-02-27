@@ -8,29 +8,16 @@ import {
 } from '@nextui-org/react';
 import { useGetAllCrypto } from '../../hooks/queryHooks';
 import {
-  Dispatch,
-  SetStateAction,
   useCallback,
-  useEffect,
-  useState,
 } from 'react';
 import { ListElement } from './listElement';
-import { LoadButton } from './loadButton';
+import { Submit } from '../ui/inputs/submit';
 
 export const CryptoList = () => {
-  const { query, offsetState } = useGetAllCrypto();
-  const [coins, setCoins] = useState<Request.Crypto[]>([]);
-  const [offset, setOffset] = offsetState;
-  const { data, isLoading } = query;
-
-  useEffect(() => {
-    if (!data) return;
-    setCoins(coins.concat(data.data.data));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-
+  const { data, isLoading,fetchNextPage } = useGetAllCrypto();
+  console.log()
   const columns = [
-    { name: 'Rank', uid: 'rank' },
+    { name: 'Id', uid: 'rank' },
     { name: 'Name', uid: 'name' },
     { name: 'Price', uid: 'priceUsd' },
     { name: 'Market Cap', uid: 'marketCapUsd' },
@@ -87,7 +74,7 @@ export const CryptoList = () => {
     },
     [],
   );
-
+    const content = data?.pages.flatMap(i => i.data.data)
   return (
     <div className="flex flex-col items-center gap-6">
       <Table isStriped aria-label="Table of crypto currencies">
@@ -99,7 +86,7 @@ export const CryptoList = () => {
           )}
         </TableHeader>
         <TableBody
-          items={coins ? coins : []}
+          items={content ? content : []}
           emptyContent={'No rows to display.'}
         >
           {(item) => (
@@ -109,12 +96,10 @@ export const CryptoList = () => {
           )}
         </TableBody>
       </Table>
-      <LoadButton
-        limit={20}
-        offset={offset as number}
-        setOffset={setOffset as Dispatch<SetStateAction<number>>}
+      <Submit
+        onClick={() => fetchNextPage()}
         isLoading={isLoading}
-      />
+      >Load More</Submit>
     </div>
   );
 };

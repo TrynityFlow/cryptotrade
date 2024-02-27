@@ -2,7 +2,7 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  keepPreviousData,
+  useInfiniteQuery,
 } from '@tanstack/react-query';
 import {
   createOperation,
@@ -100,19 +100,13 @@ export function useDelOperation() {
   });
 }
 
-export function useGetAllCrypto(initLimit = 20, initOffset = 0) {
-  const [limit, setLimit] = useState(initLimit);
-  const [offset, setOffset] = useState(initOffset);
-
-  return {
-    query: useQuery({
-      queryKey: [CRYPTO_KEY, limit, offset],
-      queryFn: async () => await getAllCrypto(limit, offset),
-      placeholderData: keepPreviousData,
-    }),
-    limitState: [limit, setLimit],
-    offsetState: [offset, setOffset],
-  };
+export function useGetAllCrypto() {
+  return useInfiniteQuery({
+      queryKey: [CRYPTO_KEY],
+      queryFn: getAllCrypto,
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) => allPages.length + 1,
+    });
 }
 
 export function useGetCrypto() {
