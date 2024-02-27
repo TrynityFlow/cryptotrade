@@ -4,13 +4,14 @@ import React, { useContext, useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
-import { InputField } from '../layout';
+import { InputField } from '../ui';
 import { RegisterSchema } from '../../schemas/register.validation';
-import { Submit } from '../layout/inputs/submit';
+import { Submit } from '../ui/inputs/submit';
 import { useRegister } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
 import { LoginContext } from '../../libs/loginContext';
-import { InputError } from '../layout/inputs/error';
+import { InputError } from '../ui/inputs/error';
+import Link from 'next/link';
 
 interface IField {
   field: {
@@ -104,6 +105,9 @@ export const RegisterForm = () => {
           <span className="mt-2"></span>
           <Submit isLoading={isPending}>Sign up</Submit>
           <InputError>{isError ? 'User already exists!' : ''}</InputError>
+          <Link href="/login" className="text-primary-600">
+            Already have an account?
+          </Link>
         </Form>
       </Formik>
     </div>

@@ -3,25 +3,36 @@ import {
   createOperation,
   delOperation,
   deluser,
+  getAllCrypto,
   getAssets,
+  getCrypto,
   getHistory,
   getProfile,
   login,
   register,
 } from '../libs/axios';
+import { useState } from 'react';
 
 const USER_KEY = 'user';
 const OP_KEY = 'op';
+const CRYPTO_KEY = 'crypto';
 
 export function useProfile() {
   return useQuery({ queryKey: [USER_KEY], queryFn: getProfile });
 }
 
-export function useHistory(params: Request.HistoryParams) {
-  return useQuery({
-    queryKey: [OP_KEY],
-    queryFn: async () => await getHistory(params),
-  });
+export function useHistory() {
+  const [count, setCount] = useState(1);
+  const [page, setPage] = useState(1);
+
+  return {
+    query: useQuery({
+      queryKey: [OP_KEY, count, page],
+      queryFn: async () => await getHistory({ count: count, page: page }),
+    }),
+    countState: [count, setCount],
+    pageState: [page, setPage],
+  };
 }
 
 export function useAssets() {
@@ -44,8 +55,9 @@ export function useRegister() {
 
   return useMutation({
     mutationFn: async (data: Request.LoginData) => await register(data),
+    mutationKey: [USER_KEY],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [] });
+      queryClient.invalidateQueries({ queryKey: [USER_KEY] });
     },
   });
 }
@@ -81,4 +93,22 @@ export function useDelOperation() {
       queryClient.invalidateQueries({ queryKey: [OP_KEY] });
     },
   });
+}
+
+export function useGetAllCrypto() {
+  return useQuery({
+    queryKey: [CRYPTO_KEY],
+    queryFn: async () => await getAllCrypto(),
+  });
+}
+
+export function useGetCrypto() {
+  const [id, setId] = useState('');
+  return {
+    query: useQuery({
+      queryKey: [id],
+      queryFn: async () => await getCrypto(id),
+    }),
+    state: [id, setId],
+  };
 }

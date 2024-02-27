@@ -4,12 +4,13 @@ import React, { useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { EyeClosedIcon } from '../icons/eyeClosed';
 import { EyeOpenedIcon } from '../icons/eyeOpened';
-import { InputField } from '../layout';
+import { InputField } from '../ui';
 import { LoginSchema } from '../../schemas/login.validation';
-import { Submit } from '../layout/inputs/submit';
+import { Submit } from '../ui/inputs/submit';
 import { useLogin } from '../../hooks/queryHooks';
 import { useRouter } from 'next/router';
-import { InputError } from '../layout/inputs/error';
+import { InputError } from '../ui/inputs/error';
+import Link from 'next/link';
 
 interface IField {
   field: {
@@ -90,6 +91,9 @@ export const LoginForm = () => {
           <span className="mt-2"></span>
           <Submit isLoading={isPending}>Sign in</Submit>
           <InputError>{isError ? 'Unable Find Matching User!' : ''}</InputError>
+          <Link href="/register" className="text-primary-600">
+            Don&apos;t have an account yet?
+          </Link>
         </Form>
       </Formik>
     </div>
