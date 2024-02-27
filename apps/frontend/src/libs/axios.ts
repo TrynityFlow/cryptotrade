@@ -38,7 +38,7 @@ export async function getProfile() {
 }
 
 export async function getAssets() {
-  return await axios.get<Request.Asset[]>('assets');
+  return await axios.get<Request.Asset[]>('wallet');
 }
 
 export async function login({ username, password }: Request.LoginData) {
@@ -82,11 +82,11 @@ export async function deluser(pass: string) {
 }
 
 export async function getAllCrypto() {
-  return await coincap.get<Request.Crypto[]>('assets');
+  return await coincap.get<Request.CryptoArray>('assets');
 }
 
-export async function getIcon(symbol: string) {
-  symbol = symbol.toLowerCase();
+export function getIcon(symbol: string | undefined) {
+  symbol = symbol?.toLowerCase();
   return `${ICON_URL}${symbol}@2x.png`;
 }
 
