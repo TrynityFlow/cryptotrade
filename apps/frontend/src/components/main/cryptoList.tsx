@@ -44,6 +44,8 @@ export const CryptoList = () => {
         minimumFractionDigits: 2,
       });
       const supplyF = Intl.NumberFormat('en', { notation: 'compact' });
+      const floatVal = parseFloat(value);
+
       switch (key as Key) {
         case 'name':
           return <ListElement item={item} />;
@@ -51,11 +53,17 @@ export const CryptoList = () => {
         case 'priceUsd':
         case 'volumeUsd24Hr':
         case 'vwap24Hr':
-          return formatter.format(parseFloat(value));
+          return formatter.format(floatVal);
         case 'changePercent24Hr':
-          return percentF.format(parseFloat(value) / 100);
+          return (
+            <span
+              className={floatVal > 0 ? 'text-success-400' : 'text-red-500'}
+            >
+              {percentF.format(floatVal / 100)}
+            </span>
+          );
         case 'supply':
-          return supplyF.format(parseFloat(value));
+          return supplyF.format(floatVal);
         default:
           return value;
       }
@@ -64,7 +72,7 @@ export const CryptoList = () => {
   );
 
   return (
-    <Table isStriped>
+    <Table isStriped aria-label="Table of crypto currencies">
       <TableHeader columns={columns}>
         {(column) => (
           <TableColumn key={column.uid} align="start">

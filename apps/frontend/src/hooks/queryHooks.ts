@@ -18,7 +18,7 @@ const OP_KEY = 'op';
 const CRYPTO_KEY = 'crypto';
 
 export function useProfile() {
-  return useQuery({ queryKey: [USER_KEY], queryFn: getProfile });
+  return useQuery({ queryKey: [USER_KEY], queryFn: getProfile, retry: false });
 }
 
 export function useHistory() {
