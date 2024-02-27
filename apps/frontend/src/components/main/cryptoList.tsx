@@ -43,7 +43,7 @@ export const CryptoList = () => {
         style: 'percent',
         minimumFractionDigits: 2,
       });
-
+      const supplyF = Intl.NumberFormat('en', { notation: 'compact' });
       switch (key as Key) {
         case 'name':
           return <ListElement item={item} />;
@@ -54,6 +54,8 @@ export const CryptoList = () => {
           return formatter.format(parseFloat(value));
         case 'changePercent24Hr':
           return percentF.format(parseFloat(value) / 100);
+        case 'supply':
+          return supplyF.format(parseFloat(value));
         default:
           return value;
       }
