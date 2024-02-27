@@ -1,6 +1,9 @@
 import Axios from 'axios';
 
 const URL = process.env.API_URL || 'http://localhost:4000/api/';
+const COINCAP_URL = process.env.COINCAP_URL || 'https://api.coincap.io/v2/';
+const ICON_URL =
+  process.env.ICON_URL || 'https://assets.coincap.io/assets/icons/';
 
 const axios = Axios.create({
   baseURL: URL,
@@ -11,6 +14,11 @@ const axios = Axios.create({
   },
   timeout: 3000,
   withCredentials: true,
+});
+
+const coincap = Axios.create({
+  baseURL: COINCAP_URL,
+  timeout: 3000,
 });
 
 export async function getHistory({
@@ -71,4 +79,17 @@ export async function deluser(pass: string) {
       password: pass,
     },
   });
+}
+
+export async function getAllCrypto() {
+  return await coincap.get<Request.Crypto[]>('assets');
+}
+
+export async function getIcon(symbol: string) {
+  symbol = symbol.toLowerCase();
+  return `${ICON_URL}${symbol}@2x.png`;
+}
+
+export async function getCrypto(id: string) {
+  return await coincap.get<Request.Crypto>(`assets/${id}`);
 }

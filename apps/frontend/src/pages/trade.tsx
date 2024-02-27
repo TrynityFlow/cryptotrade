@@ -3,7 +3,7 @@ import { MainLayout } from '../layouts';
 import { LoginContext } from '../libs/loginContext';
 import { useRouter } from 'next/router';
 
-export default function WalletPage() {
+export default function TradePage() {
   const { user } = useContext(LoginContext);
   const router = useRouter();
 
