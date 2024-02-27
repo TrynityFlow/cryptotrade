@@ -91,5 +91,5 @@ export function getIcon(symbol: string | undefined) {
 }
 
 export async function getCrypto(id: string) {
-  return await coincap.get<Request.Crypto>(`assets/${id}`);
+  return await coincap.get<Request.CryptoSingle>(`assets/${id}`);
 }

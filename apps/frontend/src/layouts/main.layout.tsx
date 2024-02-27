@@ -4,7 +4,7 @@ export const MainLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <>
       <Nav />
-      {children}
+      <div className="p-4 md:px-32 md:py-12">{children}</div>
     </>
   );
 };
