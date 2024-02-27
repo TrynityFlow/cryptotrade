@@ -7,11 +7,28 @@ import {
   TableRow,
 } from '@nextui-org/react';
 import { useGetAllCrypto } from '../../hooks/queryHooks';
-import { useCallback } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { ListElement } from './listElement';
+import { LoadButton } from './loadButton';
 
 export const CryptoList = () => {
-  const { data } = useGetAllCrypto();
+  const { query, offsetState } = useGetAllCrypto();
+  const [coins, setCoins] = useState<Request.Crypto[]>([]);
+  const [offset, setOffset] = offsetState;
+  const { data, isLoading } = query;
+
+  useEffect(() => {
+    if (!data) return;
+    setCoins(coins.concat(data.data.data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   const columns = [
     { name: 'Rank', uid: 'rank' },
     { name: 'Name', uid: 'name' },
@@ -72,24 +89,32 @@ export const CryptoList = () => {
   );
 
   return (
-    <Table isStriped aria-label="Table of crypto currencies">
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn key={column.uid} align="start">
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody
-        items={data ? data.data.data : []}
-        emptyContent={'No rows to display.'}
-      >
-        {(item) => (
-          <TableRow key={item.id}>
-            {(col) => <TableCell>{renderCell(item, col)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div className="flex flex-col items-center gap-6">
+      <Table isStriped aria-label="Table of crypto currencies">
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.uid} align="start">
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          items={coins ? coins : []}
+          emptyContent={'No rows to display.'}
+        >
+          {(item) => (
+            <TableRow key={item.id}>
+              {(col) => <TableCell>{renderCell(item, col)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <LoadButton
+        limit={20}
+        offset={offset as number}
+        setOffset={setOffset as Dispatch<SetStateAction<number>>}
+        isLoading={isLoading}
+      />
+    </div>
   );
 };

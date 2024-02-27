@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import {
   createOperation,
   delOperation,
@@ -95,11 +100,19 @@ export function useDelOperation() {
   });
 }
 
-export function useGetAllCrypto() {
-  return useQuery({
-    queryKey: [CRYPTO_KEY],
-    queryFn: async () => await getAllCrypto(),
-  });
+export function useGetAllCrypto(initLimit = 20, initOffset = 0) {
+  const [limit, setLimit] = useState(initLimit);
+  const [offset, setOffset] = useState(initOffset);
+
+  return {
+    query: useQuery({
+      queryKey: [CRYPTO_KEY, limit, offset],
+      queryFn: async () => await getAllCrypto(limit, offset),
+      placeholderData: keepPreviousData,
+    }),
+    limitState: [limit, setLimit],
+    offsetState: [offset, setOffset],
+  };
 }
 
 export function useGetCrypto() {
