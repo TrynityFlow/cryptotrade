@@ -10,6 +10,7 @@ import { useGetAllCrypto } from '../../hooks/queryHooks';
 import { useCallback } from 'react';
 import { ListElement } from './listElement';
 import { Submit } from '../ui/inputs/submit';
+import { ListSkeleton } from './listSkeleton';
 
 export const CryptoList = () => {
   const { data, isLoading, fetchNextPage } = useGetAllCrypto();
@@ -85,7 +86,7 @@ export const CryptoList = () => {
         </TableHeader>
         <TableBody
           items={content ? content : []}
-          emptyContent={'No rows to display.'}
+          emptyContent={<ListSkeleton />}
         >
           {(item) => (
             <TableRow key={item.id}>
