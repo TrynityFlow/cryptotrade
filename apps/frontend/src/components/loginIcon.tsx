@@ -2,6 +2,10 @@ import {
   Avatar,
   AvatarIcon,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Link,
   NavbarItem,
 } from '@nextui-org/react';
@@ -12,15 +16,27 @@ export const LoginIcon = () => {
 
   if (!isError) {
     return (
-      <NavbarItem>
-        <Avatar
-          icon={<AvatarIcon />}
-          classNames={{
-            base: 'bg-primary-700',
-            icon: 'text-black/80',
-          }}
-        />
-      </NavbarItem>
+      <Dropdown>
+        <DropdownTrigger>
+          <NavbarItem>
+            <Avatar
+              size="sm"
+              icon={<AvatarIcon />}
+              classNames={{
+                base: 'bg-primary-800 hover:cursor-pointer',
+                icon: 'text-black/80',
+              }}
+            />
+          </NavbarItem>
+        </DropdownTrigger>
+        <DropdownMenu aria-label="Account Actions">
+          <DropdownItem key="settings">Settings</DropdownItem>
+          <DropdownItem key="policy">Privacy Policy</DropdownItem>
+          <DropdownItem key="logout" className="text-danger" color="danger">
+            Logout
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
     );
   }
 
