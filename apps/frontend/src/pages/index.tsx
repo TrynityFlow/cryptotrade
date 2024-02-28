@@ -6,7 +6,7 @@ export function Index() {
   return (
     <MainLayout>
       <WelcomeHeader />
-      
+
       <CryptoList />
     </MainLayout>
   );
