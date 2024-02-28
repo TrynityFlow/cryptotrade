@@ -7,12 +7,12 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
 } from '@nextui-org/react';
 import Image from 'next/image';
+import { LoginIcon } from '../loginIcon';
 
 export function Nav() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -68,14 +68,7 @@ export function Nav() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="/login">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/register" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        <LoginIcon />
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
