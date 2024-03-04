@@ -81,9 +81,14 @@ export async function deluser(pass: string) {
   });
 }
 
-export async function getAllCrypto({ pageParam }: { pageParam: number }) {
+interface AllCryptoProps {
+  pageParam: number;
+  count?: number;
+}
+
+export async function getAllCrypto({ pageParam, count = 20 }: AllCryptoProps) {
   return await coincap.get<Request.CryptoArray>(
-    `assets?limit=${20}&offset=${20 * (pageParam - 1)}`,
+    `assets?limit=${count}&offset=${count * (pageParam - 1)}`,
   );
 }
 
@@ -94,4 +99,8 @@ export function getIcon(symbol: string | undefined) {
 
 export async function getCrypto(id: string) {
   return await coincap.get<Request.CryptoSingle>(`assets/${id}`);
+}
+
+export async function searchCrypto(query: string) {
+  return await coincap.get<Request.CryptoArray>(`assets?search=${query}`);
 }

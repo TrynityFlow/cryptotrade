@@ -1,9 +1,13 @@
 import { Input } from '@nextui-org/react';
-import { InputError } from './error';
 
-interface IField {
+export interface IField {
   name: string;
   value: string;
+}
+
+export interface IMeta {
+  touched: boolean;
+  error: string;
 }
 
 interface Props {
@@ -11,7 +15,8 @@ interface Props {
   type: string;
   field: IField;
   endContent?: React.ReactNode;
-  meta?: { touched: boolean; error: string };
+  meta?: IMeta;
+  onInput?: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
 export const InputField = ({
@@ -19,6 +24,7 @@ export const InputField = ({
   label,
   field,
   meta = { touched: false, error: '' },
+  onInput,
   endContent = '',
 }: Props) => {
   return (
@@ -32,8 +38,10 @@ export const InputField = ({
         endContent={endContent}
         className="w-full"
         {...field}
+        onInput={onInput}
+        isInvalid={meta.touched && !!meta.error}
+        errorMessage={meta.touched && meta.error}
       />
-      <InputError>{meta.touched && meta.error}</InputError>
     </div>
   );
 };
