@@ -12,7 +12,7 @@ export const TradeList = () => {
   };
 
   return (
-    <div>
+    <div className="flex w-full flex-col items-center justify-start gap-y-8">
       <TradeSearch updateFn={setSearch} field={searchField} />
 
       {!search && <Ranking />}
