@@ -90,7 +90,9 @@ export const LoginForm = () => {
           </Field>
           <span className="mt-2"></span>
           <Submit isLoading={isPending}>Sign in</Submit>
-          <InputError>{isError ? 'Unable Find Matching User!' : ''}</InputError>
+          <InputError>
+            {isError ? 'Unable to Find Matching User!' : ''}
+          </InputError>
           <Link href="/register" className="text-primary-600">
             Don&apos;t have an account yet?
           </Link>
