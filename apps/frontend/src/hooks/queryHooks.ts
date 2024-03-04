@@ -15,6 +15,7 @@ import {
   getProfile,
   login,
   register,
+  searchCrypto,
 } from '../libs/axios';
 import { useState } from 'react';
 
@@ -117,5 +118,24 @@ export function useGetCrypto() {
       queryFn: async () => await getCrypto(id),
     }),
     state: [id, setId],
+  };
+}
+
+export function useTopRanking() {
+  return useQuery({
+    queryKey: ['Top'],
+    queryFn: async () => await getAllCrypto({ pageParam: 1, count: 5 }),
+  });
+}
+
+export function useSearchCrypto() {
+  const [phrase, setPhrase] = useState('');
+
+  return {
+    query: useQuery({
+      queryKey: ['search', phrase],
+      queryFn: async () => await searchCrypto(phrase),
+    }),
+    state: [phrase, setPhrase],
   };
 }
