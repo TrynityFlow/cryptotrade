@@ -8,7 +8,7 @@ export const WelcomeHeader = () => {
   }
 
   return (
-    <h2 className="text-2xl font-semibold">
+    <h2 className="text-3xl font-semibold mb-14 mt-4 text-center">
       HI, {user?.username.toUpperCase()}!
     </h2>
   );
