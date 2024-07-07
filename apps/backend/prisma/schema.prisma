@@ -7,16 +7,26 @@ datasource db {
   url      = env("DB_URL")
 }
 
+enum OperationType {
+  BUY
+  SELL
+  TOPUP
+}
+
 model operation {
-  id            Int       @id @default(autoincrement())
-  user_id       Int?
-  currency_id   String    @default("notacurr") @db.VarChar(32)
-  sell          Boolean?  @default(false)
-  amount        Float     @default(0) @db.Float
-  price         Float     @default(0) @db.Float
-  partial_price Float     @default(0) @db.Float
-  ts            DateTime? @default(now()) @db.Timestamp(0)
-  user          user?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "operation_ibfk_1")
+  id        Int           @id @default(autoincrement())
+  user_id   Int
+  type      OperationType
+  positive  Boolean       @default(false)
+  amount    Float?        @default(0) @db.Float
+  createdAt DateTime      @default(now()) @db.Timestamp(0)
+
+  currency_id     String? @default("notacurr") @db.VarChar(32)
+  currency_buy    Float?  @default(0) @db.Float
+  currency_sell   Float?  @default(0) @db.Float
+  currency_amount Float?  @default(0) @db.Float
+
+  user user? @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "operation_ibfk_1")
 
   @@index([user_id], map: "user_id")
 }
