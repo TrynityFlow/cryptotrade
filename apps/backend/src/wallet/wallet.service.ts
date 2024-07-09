@@ -1,76 +1,70 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Balance } from '../types';
+
+type CurrencyTotals = {
+  [currency_id: string]: number
+}
 
 @Injectable()
 export class WalletService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getBalance(userId: number) {
-    const group = await this.prisma.operation.groupBy({
-      by: ['currency_id', 'sell'],
+  async getBalance(userId) {
+    const operations = await this.prisma.cash_operation.findMany({
       where: {
-        user_id: userId,
-      },
-      _sum: {
-        price: true,
-        amount: true,
-      },
-      _avg: {
-        price: true,
-      },
-    });
-
-    if (!group) return {};
-
-    const cryptoMap = new Map<string, Balance>();
-    group.map((current) => {
-      const id = current.currency_id;
-      if (!cryptoMap.has(id))
-        cryptoMap.set(id, {
-          symbol: id,
-          balance: 0,
-          amount: 0,
-          avg_sell: 0,
-          avg_buy: 0,
-        });
-
-      cryptoMap.get(id).balance += current._sum.price * (current.sell ? -1 : 1);
-      cryptoMap.get(id).amount += current._sum.amount * (current.sell ? -1 : 1);
-
-      if (current.sell) {
-        cryptoMap.get(id).avg_sell = current._avg.price;
-        return;
+        user_id: userId
       }
-      cryptoMap.get(id).avg_buy = current._avg.price;
     });
-    return Object.fromEntries(cryptoMap);
+  
+    let balance = 0;
+    for (const op of operations) {
+      if (op.positive) {
+        balance += op.amount;
+      } else {
+        balance -= op.amount;
+      }
+    }
+  
+    return balance;
   }
 
-  async getBalanceById(userId: number, currId: string) {
-    const group = await this.prisma.operation.groupBy({
-      by: ['sell'],
+  async isBuyPossible(userId: number, price: number): Promise<boolean> {
+    const balance = await this.getBalance(userId);
+    return !!(price <= balance);
+  }
+
+  async isSellPossible(userId, currencyId: string, amount: number): Promise<boolean> {
+    const userCurrencies = await this.getUserCurrencies(userId);
+    return !!(userCurrencies[currencyId] >= amount);
+  }
+
+  async getUserCurrencies(userId) {
+    const operations = await this.prisma.crypto_operation.findMany({
       where: {
-        user_id: userId,
-        currency_id: currId,
+        user_id: userId
       },
-      _sum: {
-        price: true,
-      },
+      select: {
+        buy: true,
+        currency_id: true,
+        currency_amount: true
+      }
     });
 
-    if (!group) return 0;
-    return group.reduce((acc, current) => {
-      return acc + current._sum.price * (current.sell ? -1 : 1);
-    }, 0);
-  }
-
-  async checkSell(
-    userId: number,
-    currId: string,
-    price: number,
-  ): Promise<boolean> {
-    const res = await this.getBalanceById(userId, currId);
-    return res - price > 0;
+    const currencyTotals: CurrencyTotals = operations.reduce((acc, op) => {
+      if (op.currency_id) {
+        if (!acc[op.currency_id]) {
+          acc[op.currency_id] = 0;
+        }
+  
+        if (op.buy) {
+          acc[op.currency_id] += op.currency_amount ?? 0;
+        } else {
+          acc[op.currency_id] -= op.currency_amount ?? 0;
+        }
+      }
+      return acc;
+    }, {} as CurrencyTotals);
+  
+    return currencyTotals;
   }
 }

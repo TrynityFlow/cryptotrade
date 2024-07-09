@@ -105,7 +105,12 @@ export class UsersService {
 
     try {
       const [, user] = await this.prisma.$transaction([
-        this.prisma.operation.deleteMany({
+        this.prisma.crypto_operation.deleteMany({
+          where: {
+            user_id: userId,
+          },
+        }),
+        this.prisma.cash_operation.deleteMany({
           where: {
             user_id: userId,
           },
