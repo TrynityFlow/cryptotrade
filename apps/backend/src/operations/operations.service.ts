@@ -24,7 +24,7 @@ export class OperationsService {
       take: +count,
     });
   }
-  
+
   async getAllCryptoOfUser(id: number, page: number, count: number) {
     return this.prisma.crypto_operation.findMany({
       where: {
@@ -35,96 +35,108 @@ export class OperationsService {
     });
   }
 
-  async insertCashOp(
-    userId: number,
-    createCryptoOpDto: CreateCryptoOpDto,
-  ) {
-      const transactionAmount = 1 * createCryptoOpDto.currency_info.amount;
+  async insertCashOp(userId: number, createCryptoOpDto: CreateCryptoOpDto) {
+    const transactionAmount = 1 * createCryptoOpDto.currency_info.amount;
 
-      if (createCryptoOpDto.buy) {
-        const isBuyPossible = await this.walletService.isBuyPossible(userId, transactionAmount);
-        if (!isBuyPossible) throw new BadRequestException('Too low balance');
-      }
+    if (createCryptoOpDto.buy) {
+      const isBuyPossible = await this.walletService.isBuyPossible(
+        userId,
+        transactionAmount,
+      );
+      if (!isBuyPossible) throw new BadRequestException('Too low balance');
+    }
 
-      if (!createCryptoOpDto.buy) {
-        const isSellPossible = await this.walletService.isSellPossible(userId, createCryptoOpDto.currency_info.id, createCryptoOpDto.currency_info.amount);
-        if (!isSellPossible) throw new BadRequestException('Insufficient amount of currency');
-      }
+    if (!createCryptoOpDto.buy) {
+      const isSellPossible = await this.walletService.isSellPossible(
+        userId,
+        createCryptoOpDto.currency_info.id,
+        createCryptoOpDto.currency_info.amount,
+      );
+      if (!isSellPossible)
+        throw new BadRequestException('Insufficient amount of currency');
+    }
 
-      return this.prisma.$transaction(async (prisma) => {
-          const cashResult = await this.prisma.cash_operation.create({
-            data: {
-              user_id: userId,
-              amount: transactionAmount,
-              positive: !createCryptoOpDto.buy
-            }
-          });
-          const buyCurrencyResult = await this.prisma.crypto_operation.create({
-            data: {
-              user_id: userId,
-              buy: createCryptoOpDto.buy,
-              currency_id: createCryptoOpDto.currency_info.id,
-              currency_buy_price: 1,
-              currency_sell_price: 1,
-              currency_amount: createCryptoOpDto.currency_info.amount,
-            }
-          });
-          return { cashResult, buyCurrencyResult };
-        })
-        .then((result) => {
-          console.log('Successful transaction', result);
-          return result;
-        })
-        .catch((err) => {
-          console.log(err);
-          throw new InternalServerErrorException('Transaction failed');
+    return this.prisma
+      .$transaction(async (prisma) => {
+        const cashResult = await this.prisma.cash_operation.create({
+          data: {
+            user_id: userId,
+            amount: transactionAmount,
+            positive: !createCryptoOpDto.buy,
+          },
         });
+        const buyCurrencyResult = await this.prisma.crypto_operation.create({
+          data: {
+            user_id: userId,
+            buy: createCryptoOpDto.buy,
+            currency_id: createCryptoOpDto.currency_info.id,
+            currency_buy_price: 1,
+            currency_sell_price: 1,
+            currency_amount: createCryptoOpDto.currency_info.amount,
+          },
+        });
+        return { cashResult, buyCurrencyResult };
+      })
+      .then((result) => {
+        console.log('Successful transaction', result);
+        return result;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new InternalServerErrorException('Transaction failed');
+      });
   }
-  
-  async insertCryptoOp(
-    userId: number,
-    createCryptoOpDto: CreateCryptoOpDto,
-  ) {
-      const transactionAmount = 1 * createCryptoOpDto.currency_info.amount;
 
-      if (createCryptoOpDto.buy) {
-        const isBuyPossible = await this.walletService.isBuyPossible(userId, transactionAmount);
-        if (!isBuyPossible) throw new BadRequestException('Too low balance');
-      }
+  async insertCryptoOp(userId: number, createCryptoOpDto: CreateCryptoOpDto) {
+    const transactionAmount = 1 * createCryptoOpDto.currency_info.amount;
 
-      if (!createCryptoOpDto.buy) {
-        const isSellPossible = await this.walletService.isSellPossible(userId, createCryptoOpDto.currency_info.id, createCryptoOpDto.currency_info.amount);
-        if (!isSellPossible) throw new BadRequestException('Insufficient amount of currency');
-      }
+    if (createCryptoOpDto.buy) {
+      const isBuyPossible = await this.walletService.isBuyPossible(
+        userId,
+        transactionAmount,
+      );
+      if (!isBuyPossible) throw new BadRequestException('Too low balance');
+    }
 
-      return this.prisma.$transaction(async (prisma) => {
-          const cashResult = await this.prisma.cash_operation.create({
-            data: {
-              user_id: userId,
-              amount: transactionAmount,
-              positive: !createCryptoOpDto.buy
-            }
-          });
-          const buyCurrencyResult = await this.prisma.crypto_operation.create({
-            data: {
-              user_id: userId,
-              buy: createCryptoOpDto.buy,
-              currency_id: createCryptoOpDto.currency_info.id,
-              currency_buy_price: 1,
-              currency_sell_price: 1,
-              currency_amount: createCryptoOpDto.currency_info.amount,
-            }
-          });
-          return { cashResult, buyCurrencyResult };
-        })
-        .then((result) => {
-          console.log('Successful transaction', result);
-          return result;
-        })
-        .catch((err) => {
-          console.log(err);
-          throw new InternalServerErrorException('Transaction failed');
+    if (!createCryptoOpDto.buy) {
+      const isSellPossible = await this.walletService.isSellPossible(
+        userId,
+        createCryptoOpDto.currency_info.id,
+        createCryptoOpDto.currency_info.amount,
+      );
+      if (!isSellPossible)
+        throw new BadRequestException('Insufficient amount of currency');
+    }
+
+    return this.prisma
+      .$transaction(async (prisma) => {
+        const cashResult = await this.prisma.cash_operation.create({
+          data: {
+            user_id: userId,
+            amount: transactionAmount,
+            positive: !createCryptoOpDto.buy,
+          },
         });
+        const buyCurrencyResult = await this.prisma.crypto_operation.create({
+          data: {
+            user_id: userId,
+            buy: createCryptoOpDto.buy,
+            currency_id: createCryptoOpDto.currency_info.id,
+            currency_buy_price: 1,
+            currency_sell_price: 1,
+            currency_amount: createCryptoOpDto.currency_info.amount,
+          },
+        });
+        return { cashResult, buyCurrencyResult };
+      })
+      .then((result) => {
+        console.log('Successful transaction', result);
+        return result;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new InternalServerErrorException('Transaction failed');
+      });
   }
 
   async delCryptoOp(userId: number, opId: number) {

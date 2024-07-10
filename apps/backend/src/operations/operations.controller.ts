@@ -38,7 +38,10 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('crypto/:id')
-  async deleteCryptoOp(@Param('id', ParseIntPipe) opId: number, @Req() req: any) {
+  async deleteCryptoOp(
+    @Param('id', ParseIntPipe) opId: number,
+    @Req() req: any,
+  ) {
     return await this.opService.delCryptoOp(req.user.id as number, opId);
   }
 }

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 type CurrencyTotals = {
-  [currency_id: string]: number
-}
+  [currency_id: string]: number;
+};
 
 @Injectable()
 export class WalletService {
@@ -12,10 +12,10 @@ export class WalletService {
   async getBalance(userId) {
     const operations = await this.prisma.cash_operation.findMany({
       where: {
-        user_id: userId
-      }
+        user_id: userId,
+      },
     });
-  
+
     let balance = 0;
     for (const op of operations) {
       if (op.positive) {
@@ -24,7 +24,7 @@ export class WalletService {
         balance -= op.amount;
       }
     }
-  
+
     return balance;
   }
 
@@ -33,7 +33,11 @@ export class WalletService {
     return !!(price <= balance);
   }
 
-  async isSellPossible(userId, currencyId: string, amount: number): Promise<boolean> {
+  async isSellPossible(
+    userId,
+    currencyId: string,
+    amount: number,
+  ): Promise<boolean> {
     const userCurrencies = await this.getUserCurrencies(userId);
     return !!(userCurrencies[currencyId] >= amount);
   }
@@ -41,13 +45,13 @@ export class WalletService {
   async getUserCurrencies(userId) {
     const operations = await this.prisma.crypto_operation.findMany({
       where: {
-        user_id: userId
+        user_id: userId,
       },
       select: {
         buy: true,
         currency_id: true,
-        currency_amount: true
-      }
+        currency_amount: true,
+      },
     });
 
     const currencyTotals: CurrencyTotals = operations.reduce((acc, op) => {
@@ -55,7 +59,7 @@ export class WalletService {
         if (!acc[op.currency_id]) {
           acc[op.currency_id] = 0;
         }
-  
+
         if (op.buy) {
           acc[op.currency_id] += op.currency_amount ?? 0;
         } else {
@@ -64,7 +68,7 @@ export class WalletService {
       }
       return acc;
     }, {} as CurrencyTotals);
-  
+
     return currencyTotals;
   }
 }
