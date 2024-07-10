@@ -139,6 +139,19 @@ export class OperationsService {
       });
   }
 
+  async delCashOp(userId: number, opId: number) {
+    try {
+      return await this.prisma.cash_operation.delete({
+        where: {
+          user_id: userId,
+          id: opId,
+        },
+      });
+    } catch (err) {
+      throw new NotFoundException('Record not found');
+    }
+  }
+  
   async delCryptoOp(userId: number, opId: number) {
     try {
       return await this.prisma.crypto_operation.delete({
