@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -14,6 +15,8 @@ export class OperationsService {
     private readonly prisma: PrismaService,
     private readonly walletService: WalletService,
   ) {}
+
+  private readonly logger: Logger = new Logger(OperationsService.name);
 
   async getAllCashOfUser(id: number, page: number, count: number) {
     return this.prisma.cash_operation.findMany({
@@ -78,11 +81,11 @@ export class OperationsService {
         return { cashResult, buyCurrencyResult };
       })
       .then((result) => {
-        console.log('Successful transaction', result);
+        this.logger.log('New successful insert cash operation', result);
         return result;
       })
       .catch((err) => {
-        console.log(err);
+        this.logger.error('Error during insert cash operation', err);
         throw new InternalServerErrorException('Transaction failed');
       });
   }
@@ -109,7 +112,7 @@ export class OperationsService {
     }
 
     return this.prisma
-      .$transaction(async (prisma) => {
+      .$transaction(async () => {
         const cashResult = await this.prisma.cash_operation.create({
           data: {
             user_id: userId,
@@ -130,11 +133,11 @@ export class OperationsService {
         return { cashResult, buyCurrencyResult };
       })
       .then((result) => {
-        console.log('Successful transaction', result);
+        this.logger.log('New successful insert crypto operation', result);
         return result;
       })
       .catch((err) => {
-        console.log(err);
+        this.logger.error('Error during insert crypto operation', err);
         throw new InternalServerErrorException('Transaction failed');
       });
   }
@@ -148,10 +151,11 @@ export class OperationsService {
         },
       });
     } catch (err) {
+      this.logger.warn('Record not found in delete cash operation', err);
       throw new NotFoundException('Record not found');
     }
   }
-  
+
   async delCryptoOp(userId: number, opId: number) {
     try {
       return await this.prisma.crypto_operation.delete({
@@ -161,6 +165,7 @@ export class OperationsService {
         },
       });
     } catch (err) {
+      this.logger.warn('Record not found in delete crypto operation', err);
       throw new NotFoundException('Record not found');
     }
   }
