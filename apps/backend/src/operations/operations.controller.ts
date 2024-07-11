@@ -47,7 +47,7 @@ export class OperationsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('crypto')
+  @Post('cash')
   async addBalance(@Req() req: any, @Body() createCashOp: CreateCashOpDto) {
     return await this.opService.addBalance(req.user.id as number, createCashOp);
   }

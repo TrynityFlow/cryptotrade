@@ -40,7 +40,8 @@ export class OperationsService {
   }
 
   async addBalance(userId: number, createCashOp: CreateCashOpDto) {
-    if (createCashOp.amount <= 0) throw new BadRequestException('Amount has to be positive');
+    if (createCashOp.amount <= 0)
+      throw new BadRequestException('Amount has to be positive');
 
     try {
       const topupResult = await this.prisma.cash_operation.create({
@@ -48,11 +49,11 @@ export class OperationsService {
           user_id: userId,
           amount: createCashOp.amount,
           positive: true,
-        }
+        },
       });
       this.logger.log('Successful topup operation', topupResult);
       return topupResult;
-    } catch(err) {
+    } catch (err) {
       this.logger.error('Error during topup operation', err);
       throw new InternalServerErrorException('Transaction failed');
     }
