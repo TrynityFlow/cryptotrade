@@ -15,6 +15,7 @@ import { JwtAuthGuard } from '../auth/jwt.guard';
 import { OperationsService } from './operations.service';
 import { CreateCryptoOpDto } from './create-crypto-operation.dto';
 import { GetOpDto } from './get-operation.dto';
+import { CreateCashOpDto } from './create-cash-operation.dto';
 
 @Controller('operations')
 export class OperationsController {
@@ -34,6 +35,21 @@ export class OperationsController {
   @Post('crypto')
   async createCryptoOp(@Req() req: any, @Body() payload: CreateCryptoOpDto) {
     return await this.opService.insertCryptoOp(req.user.id as number, payload);
+  }
+
+  @Get('cash')
+  async getCashOps(@Req() req: any, @Query() query: GetOpDto) {
+    return this.opService.getAllCashOfUser(
+      req.user.id as number,
+      query.page,
+      query.count,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('crypto')
+  async addBalance(@Req() req: any, @Body() createCashOp: CreateCashOpDto) {
+    return await this.opService.addBalance(req.user.id as number, createCashOp);
   }
 
   @UseGuards(JwtAuthGuard)
