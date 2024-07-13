@@ -9,6 +9,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCryptoOpDto } from './create-crypto-operation.dto';
 import { WalletService } from '../wallet/wallet.service';
 import { CreateCashOpDto } from './create-cash-operation.dto';
+import { getBuyPrice, getSellPrice } from './getMockCurrencyPrices';
 
 @Injectable()
 export class OperationsService {
@@ -57,7 +58,8 @@ export class OperationsService {
   }
 
   async insertCryptoOp(userId: number, createCryptoOpDto: CreateCryptoOpDto) {
-    const transactionAmount = 1 * createCryptoOpDto.currency_info.amount;
+    const price = createCryptoOpDto.buy ? getBuyPrice() : getSellPrice();
+    const transactionAmount = price * createCryptoOpDto.currency_info.amount;
 
     if (createCryptoOpDto.buy) {
       const isBuyPossible = await this.walletService.isBuyPossible(
@@ -90,9 +92,10 @@ export class OperationsService {
           data: {
             user_id: userId,
             buy: createCryptoOpDto.buy,
+            cash_operation_id: cashResult.id,
             currency_id: createCryptoOpDto.currency_info.id,
-            currency_buy_price: 1,
-            currency_sell_price: 1,
+            currency_buy_price: getBuyPrice(),
+            currency_sell_price: getSellPrice(),
             currency_amount: createCryptoOpDto.currency_info.amount,
           },
         });
