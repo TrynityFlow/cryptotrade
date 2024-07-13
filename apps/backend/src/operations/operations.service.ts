@@ -86,7 +86,7 @@ export class OperationsService {
             positive: !createCryptoOpDto.buy,
           },
         });
-        const buyCurrencyResult = await this.prisma.crypto_operation.create({
+        const currencyResult = await this.prisma.crypto_operation.create({
           data: {
             user_id: userId,
             buy: createCryptoOpDto.buy,
@@ -96,7 +96,7 @@ export class OperationsService {
             currency_amount: createCryptoOpDto.currency_info.amount,
           },
         });
-        return { cashResult, buyCurrencyResult };
+        return { cashResult, currencyResult };
       })
       .then((result) => {
         this.logger.log('New successful insert crypto operation', result);
