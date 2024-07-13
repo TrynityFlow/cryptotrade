@@ -10,6 +10,7 @@ export class WalletController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getBalance(@Req() req: any) {
-    return await this.walletService.getBalance(req.user.id as number);
+    const balance = await this.walletService.getBalance(req.user.id as number);
+    return { balance };
   }
 }
