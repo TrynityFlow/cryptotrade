@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsNotEmpty,
   IsPositive,
   IsString,
   ValidateNested,
@@ -18,7 +19,8 @@ export class CreateCryptoOpDto {
   @IsBoolean()
   buy: boolean;
 
+  @IsNotEmpty()
   @ValidateNested()
   @Type(() => CurrencyInfo)
-  currency_info?: CurrencyInfo;
+  currency_info: CurrencyInfo;
 }
