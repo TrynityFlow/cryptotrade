@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import Decimal from 'decimal.js';
 
 type CurrencyTotals = {
-  [currency_id: string]: number;
+  [currency_id: string]: Decimal;
 };
 
 @Injectable()
@@ -15,31 +16,43 @@ export class WalletService {
         user_id: userId,
       },
     });
-
-    let balance = 0;
+  
+    let balance = new Decimal(0);
     for (const op of operations) {
+      const opAmount = new Decimal(op.amount);
       if (op.positive) {
-        balance += op.amount;
+        balance = balance.plus(opAmount);
       } else {
-        balance -= op.amount;
+        balance = balance.minus(opAmount);
       }
     }
-
-    return balance;
+  
+    return balance.toFixed();
   }
 
-  async isBuyPossible(userId: number, price: number): Promise<boolean> {
+  async isBuyPossible(userId: number, price: string): Promise<boolean> {
     const balance = await this.getBalance(userId);
-    return !!(price <= balance);
+    const decimalBalance = new Decimal(balance);
+    const decimalPrice = new Decimal(price);
+  
+    return decimalBalance.greaterThanOrEqualTo(decimalPrice);
   }
 
   async isSellPossible(
-    userId,
+    userId: number,
     currencyId: string,
-    amount: number,
+    amount: string,
   ): Promise<boolean> {
     const userCurrencies = await this.getUserCurrencies(userId);
-    return !!(userCurrencies[currencyId] >= amount);
+    
+    if (!userCurrencies[currencyId]) {
+      return false;
+    }
+    
+    const userCurrencyAmount = new Decimal(userCurrencies[currencyId]);
+    const decimalAmount = new Decimal(amount);
+  
+    return userCurrencyAmount.greaterThanOrEqualTo(decimalAmount);
   }
 
   async getUserCurrencies(userId) {
@@ -57,18 +70,22 @@ export class WalletService {
     const currencyTotals: CurrencyTotals = operations.reduce((acc, op) => {
       if (op.currency_id) {
         if (!acc[op.currency_id]) {
-          acc[op.currency_id] = 0;
+          acc[op.currency_id] = new Decimal(0);
         }
-
+    
         if (op.buy) {
-          acc[op.currency_id] += op.currency_amount ?? 0;
+          acc[op.currency_id] = acc[op.currency_id].plus(new Decimal(op.currency_amount ?? 0));
         } else {
-          acc[op.currency_id] -= op.currency_amount ?? 0;
+          acc[op.currency_id] = acc[op.currency_id].minus(new Decimal(op.currency_amount ?? 0));
         }
       }
       return acc;
     }, {} as CurrencyTotals);
+    
+    const result = Object.fromEntries(
+      Object.entries(currencyTotals).map(([currency_id, total]) => [currency_id, total.toFixed()])
+    );
 
-    return currencyTotals;
+    return result;
   }
 }

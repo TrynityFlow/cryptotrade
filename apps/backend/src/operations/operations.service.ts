@@ -10,6 +10,7 @@ import { CreateCryptoOpDto } from './create-crypto-operation.dto';
 import { WalletService } from '../wallet/wallet.service';
 import { CreateCashOpDto } from './create-cash-operation.dto';
 import { getBuyPrice, getSellPrice } from './getMockCurrencyPrices';
+import Decimal from 'decimal.js';
 
 @Injectable()
 export class OperationsService {
@@ -58,13 +59,14 @@ export class OperationsService {
   }
 
   async insertCryptoOp(userId: number, createCryptoOpDto: CreateCryptoOpDto) {
-    const price = createCryptoOpDto.buy ? getBuyPrice() : getSellPrice();
-    const transactionAmount = price * createCryptoOpDto.currency_info.amount;
+    const price = new Decimal(createCryptoOpDto.buy ? getBuyPrice() : getSellPrice());
+    const amount = new Decimal(createCryptoOpDto.currency_info.amount);
+    const transactionAmount = price.times(amount);
 
     if (createCryptoOpDto.buy) {
       const isBuyPossible = await this.walletService.isBuyPossible(
         userId,
-        transactionAmount,
+        transactionAmount.toFixed(),
       );
       if (!isBuyPossible) throw new BadRequestException('Too low balance');
     }
@@ -73,7 +75,7 @@ export class OperationsService {
       const isSellPossible = await this.walletService.isSellPossible(
         userId,
         createCryptoOpDto.currency_info.id,
-        createCryptoOpDto.currency_info.amount,
+        `${createCryptoOpDto.currency_info.amount}`,
       );
       if (!isSellPossible)
         throw new BadRequestException('Insufficient amount of currency');
@@ -84,7 +86,7 @@ export class OperationsService {
         const cashResult = await this.prisma.cash_operation.create({
           data: {
             user_id: userId,
-            amount: transactionAmount,
+            amount: transactionAmount.toFixed(),
             positive: !createCryptoOpDto.buy,
           },
         });

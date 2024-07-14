@@ -10,7 +10,7 @@ datasource db {
 model cash_operation {
   id        Int      @id @default(autoincrement())
   user_id   Int
-  amount    Float    @default(0) @db.Float
+  amount    Decimal  @db.Decimal(38, 18)
   positive  Boolean  @default(false)
   createdAt DateTime @default(now()) @db.Timestamp(0)
 
@@ -21,17 +21,16 @@ model cash_operation {
 }
 
 model crypto_operation {
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  buy       Boolean
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-
+  id                Int      @id @default(autoincrement())
+  user_id           Int
+  buy               Boolean
+  createdAt         DateTime @default(now()) @db.Timestamp(0)
   cash_operation_id Int?
 
-  currency_id         String @default("notacurr") @db.VarChar(32)
-  currency_buy_price  Float  @default(0) @db.Float
-  currency_sell_price Float  @default(0) @db.Float
-  currency_amount     Float  @default(0) @db.Float
+  currency_id         String  @default("notacurr") @db.VarChar(32)
+  currency_buy_price  Decimal @db.Decimal(38, 18)
+  currency_sell_price Decimal @db.Decimal(38, 18)
+  currency_amount     Decimal @db.Decimal(38, 18)
 
   user           user?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "crypto_operation_ibfk_1")
   cash_operation cash_operation? @relation(fields: [cash_operation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "crypto_operation_ibfk_2")
