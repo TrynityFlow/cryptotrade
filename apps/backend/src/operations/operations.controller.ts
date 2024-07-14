@@ -51,13 +51,4 @@ export class OperationsController {
   async addBalance(@Req() req: any, @Body() createCashOp: CreateCashOpDto) {
     return await this.opService.addBalance(req.user.id as number, createCashOp);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete('crypto/:id')
-  async deleteCryptoOp(
-    @Param('id', ParseIntPipe) opId: number,
-    @Req() req: any,
-  ) {
-    return await this.opService.delCryptoOp(req.user.id as number, opId);
-  }
 }
