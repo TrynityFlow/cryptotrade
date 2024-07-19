@@ -1,76 +1,91 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Balance } from '../types';
+import Decimal from 'decimal.js';
+
+type CurrencyTotals = {
+  [currency_id: string]: Decimal;
+};
 
 @Injectable()
 export class WalletService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getBalance(userId: number) {
-    const group = await this.prisma.operation.groupBy({
-      by: ['currency_id', 'sell'],
+  async getBalance(userId) {
+    const operations = await this.prisma.cash_operation.findMany({
       where: {
         user_id: userId,
       },
-      _sum: {
-        price: true,
-        amount: true,
-      },
-      _avg: {
-        price: true,
-      },
     });
-
-    if (!group) return {};
-
-    const cryptoMap = new Map<string, Balance>();
-    group.map((current) => {
-      const id = current.currency_id;
-      if (!cryptoMap.has(id))
-        cryptoMap.set(id, {
-          symbol: id,
-          balance: 0,
-          amount: 0,
-          avg_sell: 0,
-          avg_buy: 0,
-        });
-
-      cryptoMap.get(id).balance += current._sum.price * (current.sell ? -1 : 1);
-      cryptoMap.get(id).amount += current._sum.amount * (current.sell ? -1 : 1);
-
-      if (current.sell) {
-        cryptoMap.get(id).avg_sell = current._avg.price;
-        return;
+  
+    let balance = new Decimal(0);
+    for (const op of operations) {
+      const opAmount = new Decimal(op.amount);
+      if (op.positive) {
+        balance = balance.plus(opAmount);
+      } else {
+        balance = balance.minus(opAmount);
       }
-      cryptoMap.get(id).avg_buy = current._avg.price;
-    });
-    return Object.fromEntries(cryptoMap);
+    }
+  
+    return balance.toFixed();
   }
 
-  async getBalanceById(userId: number, currId: string) {
-    const group = await this.prisma.operation.groupBy({
-      by: ['sell'],
+  async isBuyPossible(userId: number, price: string): Promise<boolean> {
+    const balance = await this.getBalance(userId);
+    const decimalBalance = new Decimal(balance);
+    const decimalPrice = new Decimal(price);
+  
+    return decimalBalance.greaterThanOrEqualTo(decimalPrice);
+  }
+
+  async isSellPossible(
+    userId: number,
+    currencyId: string,
+    amount: string,
+  ): Promise<boolean> {
+    const userCurrencies = await this.getUserCurrencies(userId);
+    
+    if (!userCurrencies[currencyId]) {
+      return false;
+    }
+    
+    const userCurrencyAmount = new Decimal(userCurrencies[currencyId]);
+    const decimalAmount = new Decimal(amount);
+  
+    return userCurrencyAmount.greaterThanOrEqualTo(decimalAmount);
+  }
+
+  async getUserCurrencies(userId) {
+    const operations = await this.prisma.crypto_operation.findMany({
       where: {
         user_id: userId,
-        currency_id: currId,
       },
-      _sum: {
-        price: true,
+      select: {
+        buy: true,
+        currency_id: true,
+        currency_amount: true,
       },
     });
 
-    if (!group) return 0;
-    return group.reduce((acc, current) => {
-      return acc + current._sum.price * (current.sell ? -1 : 1);
-    }, 0);
-  }
+    const currencyTotals: CurrencyTotals = operations.reduce((acc, op) => {
+      if (op.currency_id) {
+        if (!acc[op.currency_id]) {
+          acc[op.currency_id] = new Decimal(0);
+        }
+    
+        if (op.buy) {
+          acc[op.currency_id] = acc[op.currency_id].plus(new Decimal(op.currency_amount ?? 0));
+        } else {
+          acc[op.currency_id] = acc[op.currency_id].minus(new Decimal(op.currency_amount ?? 0));
+        }
+      }
+      return acc;
+    }, {} as CurrencyTotals);
+    
+    const result = Object.fromEntries(
+      Object.entries(currencyTotals).map(([currency_id, total]) => [currency_id, total.toFixed()])
+    );
 
-  async checkSell(
-    userId: number,
-    currId: string,
-    price: number,
-  ): Promise<boolean> {
-    const res = await this.getBalanceById(userId, currId);
-    return res - price > 0;
+    return result;
   }
 }

@@ -7,25 +7,43 @@ datasource db {
   url      = env("DB_URL")
 }
 
-model operation {
-  id            Int       @id @default(autoincrement())
-  user_id       Int?
-  currency_id   String    @default("notacurr") @db.VarChar(32)
-  sell          Boolean?  @default(false)
-  amount        Float     @default(0) @db.Float
-  price         Float     @default(0) @db.Float
-  partial_price Float     @default(0) @db.Float
-  ts            DateTime? @default(now()) @db.Timestamp(0)
-  user          user?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "operation_ibfk_1")
+model cash_operation {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  amount    Decimal  @db.Decimal(38, 18)
+  positive  Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+
+  user             user?              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cash_operation_ibfk_1")
+  crypto_operation crypto_operation[]
+
+  @@index([user_id], map: "user_id")
+}
+
+model crypto_operation {
+  id                Int      @id @default(autoincrement())
+  user_id           Int
+  buy               Boolean
+  createdAt         DateTime @default(now()) @db.Timestamp(0)
+  cash_operation_id Int?
+
+  currency_id         String  @default("notacurr") @db.VarChar(32)
+  currency_buy_price  Decimal @db.Decimal(38, 18)
+  currency_sell_price Decimal @db.Decimal(38, 18)
+  currency_amount     Decimal @db.Decimal(38, 18)
+
+  user           user?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "crypto_operation_ibfk_1")
+  cash_operation cash_operation? @relation(fields: [cash_operation_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "crypto_operation_ibfk_2")
 
   @@index([user_id], map: "user_id")
 }
 
 model user {
-  id        Int         @id @default(autoincrement())
-  username  String      @unique(map: "username") @default("Unknown") @db.VarChar(30)
-  password  String      @db.VarChar(60)
-  operation operation[]
+  id               Int                @id @default(autoincrement())
+  username         String             @unique(map: "username") @default("Unknown") @db.VarChar(30)
+  password         String             @db.VarChar(60)
+  cash_operation   cash_operation[]
+  crypto_operation crypto_operation[]
 
   @@index([username], map: "username_idx")
 }

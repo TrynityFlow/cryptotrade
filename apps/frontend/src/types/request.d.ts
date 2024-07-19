@@ -6,7 +6,7 @@ declare namespace Request {
 
   interface OpData {
     currency: string;
-    amount: number;
+    amount: string;
     costPerAsset: number;
     sell: boolean;
   }
