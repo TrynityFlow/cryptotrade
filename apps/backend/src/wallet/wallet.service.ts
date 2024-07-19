@@ -16,7 +16,7 @@ export class WalletService {
         user_id: userId,
       },
     });
-  
+
     let balance = new Decimal(0);
     for (const op of operations) {
       const opAmount = new Decimal(op.amount);
@@ -26,7 +26,7 @@ export class WalletService {
         balance = balance.minus(opAmount);
       }
     }
-  
+
     return balance.toFixed();
   }
 
@@ -34,7 +34,7 @@ export class WalletService {
     const balance = await this.getBalance(userId);
     const decimalBalance = new Decimal(balance);
     const decimalPrice = new Decimal(price);
-  
+
     return decimalBalance.greaterThanOrEqualTo(decimalPrice);
   }
 
@@ -44,14 +44,14 @@ export class WalletService {
     amount: string,
   ): Promise<boolean> {
     const userCurrencies = await this.getUserCurrencies(userId);
-    
+
     if (!userCurrencies[currencyId]) {
       return false;
     }
-    
+
     const userCurrencyAmount = new Decimal(userCurrencies[currencyId]);
     const decimalAmount = new Decimal(amount);
-  
+
     return userCurrencyAmount.greaterThanOrEqualTo(decimalAmount);
   }
 
@@ -72,18 +72,25 @@ export class WalletService {
         if (!acc[op.currency_id]) {
           acc[op.currency_id] = new Decimal(0);
         }
-    
+
         if (op.buy) {
-          acc[op.currency_id] = acc[op.currency_id].plus(new Decimal(op.currency_amount ?? 0));
+          acc[op.currency_id] = acc[op.currency_id].plus(
+            new Decimal(op.currency_amount ?? 0),
+          );
         } else {
-          acc[op.currency_id] = acc[op.currency_id].minus(new Decimal(op.currency_amount ?? 0));
+          acc[op.currency_id] = acc[op.currency_id].minus(
+            new Decimal(op.currency_amount ?? 0),
+          );
         }
       }
       return acc;
     }, {} as CurrencyTotals);
-    
+
     const result = Object.fromEntries(
-      Object.entries(currencyTotals).map(([currency_id, total]) => [currency_id, total.toFixed()])
+      Object.entries(currencyTotals).map(([currency_id, total]) => [
+        currency_id,
+        total.toFixed(),
+      ]),
     );
 
     return result;

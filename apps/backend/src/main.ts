@@ -34,9 +34,9 @@ async function bootstrap() {
     .setDescription('API for CryptoTrade demo stock market application')
     .setVersion('1.0')
     .build();
-  
+
   const document = SwaggerModule.createDocument(app, docsConfig);
-  
+
   SwaggerModule.setup('docs', app, document);
 
   const port = process.env.PORT || 4000;
