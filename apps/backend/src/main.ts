@@ -2,6 +2,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import { AppModule } from './app/app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
@@ -27,6 +28,16 @@ async function bootstrap() {
     allowedHeaders: ['*', 'Content-Type', 'content-Type', 'Authorization'],
   });
   app.use(helmet());
+
+  const docsConfig = new DocumentBuilder()
+    .setTitle('CryptoTrade API')
+    .setDescription('API for CryptoTrade demo stock market application')
+    .setVersion('1.0')
+    .build();
+  
+  const document = SwaggerModule.createDocument(app, docsConfig);
+  
+  SwaggerModule.setup('docs', app, document);
 
   const port = process.env.PORT || 4000;
 
