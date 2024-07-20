@@ -59,7 +59,9 @@ export class OperationsService {
   }
 
   async insertCryptoOp(userId: number, createCryptoOpDto: CreateCryptoOpDto) {
-    const price = new Decimal(createCryptoOpDto.buy ? getBuyPrice() : getSellPrice());
+    const price = new Decimal(
+      createCryptoOpDto.buy ? getBuyPrice() : getSellPrice(),
+    );
     const amount = new Decimal(createCryptoOpDto.currency_info.amount);
     const transactionAmount = price.times(amount);
 

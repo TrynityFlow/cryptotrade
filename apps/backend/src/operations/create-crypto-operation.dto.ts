@@ -6,6 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 class CurrencyInfo {
   @IsString()
@@ -17,10 +18,26 @@ class CurrencyInfo {
 
 export class CreateCryptoOpDto {
   @IsBoolean()
+  @ApiProperty({ example: true })
   buy: boolean;
 
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => CurrencyInfo)
+  @ApiProperty({
+    properties: {
+      id: {
+        type: 'string',
+      },
+      amount: {
+        type: 'number',
+        description: 'Positive number',
+      },
+    },
+    example: {
+      id: '1',
+      amount: 0.1,
+    },
+  })
   currency_info: CurrencyInfo;
 }
