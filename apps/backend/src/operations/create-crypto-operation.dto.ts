@@ -31,7 +31,7 @@ export class CreateCryptoOpDto {
       },
       amount: {
         type: 'number',
-        description: 'Positive number'
+        description: 'Positive number',
       },
     },
     example: {

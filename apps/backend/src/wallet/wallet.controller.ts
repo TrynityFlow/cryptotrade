@@ -24,7 +24,7 @@ export class WalletController {
         balance: {
           type: 'string',
           example: '1.00000000001',
-          description: 'Positive string number'
+          description: 'Positive string number',
         },
       },
     },

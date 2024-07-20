@@ -29,15 +29,17 @@ async function bootstrap() {
   });
   app.use(helmet());
 
-  const docsConfig = new DocumentBuilder()
-    .setTitle('CryptoTrade API')
-    .setDescription('API for CryptoTrade demo stock market application')
-    .setVersion('1.0')
-    .build();
+  if (process.env.NODE_ENV === 'development') {
+    const docsConfig = new DocumentBuilder()
+      .setTitle('CryptoTrade API')
+      .setDescription('API for CryptoTrade demo stock market application')
+      .setVersion('1.0')
+      .build();
 
-  const document = SwaggerModule.createDocument(app, docsConfig);
+    const document = SwaggerModule.createDocument(app, docsConfig);
 
-  SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup('docs', app, document);
+  }
 
   const port = process.env.PORT || 4000;
 

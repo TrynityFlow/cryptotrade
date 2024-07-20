@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { Unauthorized, BadRequestException, InternalServerError } from '../docs/common/responses.docs';
+import {
+  Unauthorized,
+  BadRequestException,
+  InternalServerError,
+} from '../docs/common/responses.docs';
 import { PatchPasswordDto, PatchUsernameDto } from './patchUser.dto';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './createUser.dto';
