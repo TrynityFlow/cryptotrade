@@ -18,12 +18,13 @@ export class WalletController {
   @ApiOperation({ summary: 'Get user balance' })
   @ApiResponse({
     status: 200,
-    description: 'Successfull get balance',
+    description: 'Successfully get balance',
     schema: {
       properties: {
         balance: {
           type: 'string',
-          example: '1.00000000001'
+          example: '1.00000000001',
+          description: 'Positive string number'
         },
       },
     },
