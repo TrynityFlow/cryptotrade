@@ -12,7 +12,7 @@ import { OperationsService } from './operations.service';
 import { CreateCryptoOpDto } from './create-crypto-operation.dto';
 import { GetOpDto } from './get-operation.dto';
 import { CreateCashOpDto } from './create-cash-operation.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { CryptoOpDto } from './docs/crypto-op.dto.docs';
 import { CashOpDto } from './docs/cash-op.dto.docs';
 import { InsertOpDto } from './docs/insert-operation.dto.docs';
@@ -29,7 +29,9 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Get('crypto')
-  @ApiOperation({ summary: 'Get all crypto operations' })
+  @ApiOperation({ summary: 'Get crypto operations' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'count', required: false, type: Number })
   @ApiResponse({
     status: 200,
     description: 'List of crypto operations',
@@ -63,7 +65,9 @@ export class OperationsController {
 
   @UseGuards(JwtAuthGuard)
   @Get('cash')
-  @ApiOperation({ summary: 'Get all cash operations' })
+  @ApiOperation({ summary: 'Get cash operations' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'count', required: false, type: Number })
   @ApiResponse({
     status: 200,
     description: 'List of cash operations',
