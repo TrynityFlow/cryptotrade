@@ -9,10 +9,16 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { OperationsService } from './operations.service';
-import { CreateCryptoOpDto } from './create-crypto-operation.dto';
-import { GetOpDto } from './get-operation.dto';
-import { CreateCashOpDto } from './create-cash-operation.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { CreateCryptoOpDto } from './dto/create-crypto-operation.dto';
+import { OperationQueryParams } from './dto/operation-query-params.dto';
+import { CreateCashOpDto } from './dto/create-cash-operation.dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { CryptoOpDto } from './docs/crypto-op.dto.docs';
 import { CashOpDto } from './docs/cash-op.dto.docs';
 import { InsertOpDto } from './docs/insert-operation.dto.docs';
@@ -21,6 +27,9 @@ import {
   Unauthorized,
   BadRequestException,
 } from '../docs/common/responses.docs';
+import { CashOperationFilter, CryptoOperationFilter } from './dto/operation-filter.dto';
+import { FilterCryptoBodyDto } from './docs/filter-crypto-op.dto.docs';
+import { FilterCashBodyDto } from './docs/filter-cash-op.dto.docs';
 
 @ApiTags('Operations')
 @Controller('operations')
@@ -32,6 +41,9 @@ export class OperationsController {
   @ApiOperation({ summary: 'Get crypto operations' })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'count', required: false, type: Number })
+  @ApiBody({
+    type: FilterCryptoBodyDto
+  })
   @ApiResponse({
     status: 200,
     description: 'List of crypto operations',
@@ -39,11 +51,16 @@ export class OperationsController {
   })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
-  async getCryptoOps(@Req() req: any, @Query() query: GetOpDto) {
-    return this.opService.getAllCryptoOfUser(
+  async getCryptoOps(
+    @Req() req: any,
+    @Query() query: OperationQueryParams,
+    @Body() filter: CryptoOperationFilter
+  ) {
+    return this.opService.getCryptoOperations(
       req.user.id as number,
       query.page,
       query.count,
+      filter
     );
   }
 
@@ -68,6 +85,9 @@ export class OperationsController {
   @ApiOperation({ summary: 'Get cash operations' })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'count', required: false, type: Number })
+  @ApiBody({
+    type: FilterCashBodyDto
+  })
   @ApiResponse({
     status: 200,
     description: 'List of cash operations',
@@ -75,11 +95,16 @@ export class OperationsController {
   })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
-  async getCashOps(@Req() req: any, @Query() query: GetOpDto) {
-    return this.opService.getAllCashOfUser(
+  async getCashOps(
+    @Req() req: any,
+    @Query() query: OperationQueryParams,
+    @Body() filter: CashOperationFilter
+  ) {
+    return this.opService.getCashOperations(
       req.user.id as number,
       query.page,
       query.count,
+      filter
     );
   }
 
