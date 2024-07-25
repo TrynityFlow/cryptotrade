@@ -6,11 +6,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateCryptoOpDto } from './create-crypto-operation.dto';
+import { CreateCryptoOpDto } from './dto/create-crypto-operation.dto';
 import { WalletService } from '../wallet/wallet.service';
-import { CreateCashOpDto } from './create-cash-operation.dto';
+import { CreateCashOpDto } from './dto/create-cash-operation.dto';
 import { getBuyPrice, getSellPrice } from './getMockCurrencyPrices';
 import Decimal from 'decimal.js';
+import { CashOperationFilter, CryptoOperationFilter } from './dto/operation-filter.dto';
 
 @Injectable()
 export class OperationsService {
@@ -21,24 +22,36 @@ export class OperationsService {
 
   private readonly logger: Logger = new Logger(OperationsService.name);
 
-  async getAllCashOfUser(id: number, page: number, count: number) {
-    return this.prisma.cash_operation.findMany({
+  async getCashOperations(id: number, page?: number, count?: number, filter?: CashOperationFilter) {
+    const query: any = {
       where: {
         user_id: id,
+        ...filter,
       },
-      skip: (page - 1) * count,
-      take: +count,
-    });
+    };
+
+    if (page !== undefined && count !== undefined) {
+      query.skip = (page - 1) * count;
+      query.take = +count;
+    }
+
+    return this.prisma.cash_operation.findMany(query);
   }
 
-  async getAllCryptoOfUser(id: number, page: number, count: number) {
-    return this.prisma.crypto_operation.findMany({
+  async getCryptoOperations(id: number, page?: number, count?: number, filter?: CryptoOperationFilter) {
+    const query: any = {
       where: {
         user_id: id,
+        ...filter,
       },
-      skip: (page - 1) * count,
-      take: +count,
-    });
+    };
+
+    if (page !== undefined && count !== undefined) {
+      query.skip = (page - 1) * count;
+      query.take = +count;
+    }
+
+    return this.prisma.crypto_operation.findMany(query);
   }
 
   async addBalance(userId: number, createCashOp: CreateCashOpDto) {

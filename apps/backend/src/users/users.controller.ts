@@ -20,7 +20,7 @@ import { PatchPasswordDto, PatchUsernameDto } from './patchUser.dto';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './createUser.dto';
 import { DeleteUserDto } from './delUser.dto';
-import { ResponseUserDto } from './response-user.dto.docs';
+import { ResponseUserDto } from '../docs/common/response-user.dto.docs';
 
 @ApiTags('Users')
 @Controller('users')
@@ -33,7 +33,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Successfully get user',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
@@ -48,7 +48,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Successfully updated username',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
@@ -66,7 +66,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Successfully updated password',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiResponse(BadRequestException)
   @ApiResponse(Unauthorized)
@@ -83,7 +83,7 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'Successfully created new user',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse(BadRequestException)

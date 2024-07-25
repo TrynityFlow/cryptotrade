@@ -4,11 +4,12 @@ import { Request as Req, Response } from 'express';
 import { User } from '../types';
 import { LocalAuthGuard } from './auth.guard';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { AuthRequestBody, SuccessResponse } from './auth.docs';
+import { AuthRequestBody } from './auth.docs';
 import {
   InternalServerError,
   Unauthorized,
 } from '../docs/common/responses.docs';
+import { ResponseUserDto } from '../docs/common/response-user.dto.docs';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -19,7 +20,11 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Authenticate' })
   @ApiBody(AuthRequestBody)
-  @ApiResponse(SuccessResponse)
+  @ApiResponse({
+    status: 201,
+    description: 'Successfully authenticated',
+    type: ResponseUserDto,
+  })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
   async login(@Request() req: Req, @Res() res: Response) {
