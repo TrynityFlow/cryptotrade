@@ -17,6 +17,7 @@ export const SuccessResponse = {
   status: 201,
   description: 'Successfully authenticated',
   schema: {
+    type: 'object',
     properties: {
       id: {
         type: 'number',

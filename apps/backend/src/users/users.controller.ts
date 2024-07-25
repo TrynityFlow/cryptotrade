@@ -33,7 +33,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Successfully get user',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
@@ -48,7 +48,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Successfully updated username',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiResponse(Unauthorized)
   @ApiResponse(InternalServerError)
@@ -66,7 +66,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'Successfully updated password',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiResponse(BadRequestException)
   @ApiResponse(Unauthorized)
@@ -83,7 +83,7 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'Successfully created new user',
-    type: [ResponseUserDto],
+    type: ResponseUserDto,
   })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse(BadRequestException)
